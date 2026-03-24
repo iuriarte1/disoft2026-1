@@ -24,7 +24,11 @@ public class View
     {
         _view.WriteLine(message);
     }
-    
+
+    public void InvalidTeamsFileMessage()
+    {
+        _view.WriteLine("Archivo de equipos no válido");
+    }
     public string[] GetScript()
         => _view.GetScript();
 }

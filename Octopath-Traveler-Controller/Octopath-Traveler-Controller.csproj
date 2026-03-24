@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Octopath-Traveler-Model\Octopath-Traveler-Model.csproj" />
       <ProjectReference Include="..\Octopath-Traveler-View\Octopath-Traveler-View.csproj" />
     </ItemGroup>
 

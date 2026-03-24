@@ -32,3 +32,19 @@ C:\Users\matia\Desktop\Base Octopath\Octopath-Traveler\Octopath-Traveler-View\ob
 C:\Users\matia\Desktop\Base Octopath\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\refint\Octopath-Traveler-View.dll
 C:\Users\matia\Desktop\Base Octopath\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.pdb
 C:\Users\matia\Desktop\Base Octopath\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\ref\Octopath-Traveler-View.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\bin\Debug\net8.0\Octopath-Traveler-View.deps.json
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\bin\Debug\net8.0\Octopath-Traveler-View.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\bin\Debug\net8.0\Octopath-Traveler-View.pdb
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\bin\Debug\net8.0\Octopath-Traveler-Model.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\bin\Debug\net8.0\Octopath-Traveler-Model.pdb
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.csproj.AssemblyReference.cache
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.AssemblyInfoInputs.cache
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.AssemblyInfo.cs
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.csproj.CoreCompileInputs.cache
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.sourcelink.json
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath.7E2270E9.Up2Date
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\refint\Octopath-Traveler-View.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\Octopath-Traveler-View.pdb
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-View\obj\Debug\net8.0\ref\Octopath-Traveler-View.dll
