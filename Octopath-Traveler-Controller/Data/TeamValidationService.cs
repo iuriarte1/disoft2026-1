@@ -96,7 +96,7 @@ public class TeamValidationService
         foreach (var beast in beasts)
         {
             if (SkipBeast(beast)) continue;
-            if (beast.ActiveSkills != null && beast.ActiveSkills.Count > PassiveSkillsPerBeast)
+            if (beast.Skills != null && beast.Skills.Count > PassiveSkillsPerBeast)
             {
                 _view.InvalidTeamsFileMessage();
                 return false;

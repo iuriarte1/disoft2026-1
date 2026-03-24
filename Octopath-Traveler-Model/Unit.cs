@@ -19,4 +19,11 @@ public class Unit
         CurrentHp -= damageAmount;
         if (CurrentHp < 0) CurrentHp = 0;
     }
+
+    public virtual string GetStatsSummary()
+    {
+        return $"{Name} - HP:{CurrentHp}/{BaseStats.MaxHp} SP:{CurrentSp}/{BaseStats.MaxSp} BP:{CurrentBp}";
+    }
+
+    
 }
