@@ -1,0 +1,22 @@
+using System.Text.Json.Serialization;
+namespace Octopath_Traveler_Model;
+
+public class Unit
+{
+    public string Name { get; set; }
+    [JsonPropertyName("Stats")]
+    public Stats BaseStats { get; set; }
+        
+    // Atributos mutables durante el combate
+    public int CurrentHp { get; set; }
+    public int CurrentSp { get; set; }
+    public int CurrentBp { get; set; } // Boost Points (0 en E1, pero lo dejamos listo)
+
+    public bool IsDead => CurrentHp <= 0;
+
+    public void TakeDamage(int damageAmount)
+    {
+        CurrentHp -= damageAmount;
+        if (CurrentHp < 0) CurrentHp = 0;
+    }
+}

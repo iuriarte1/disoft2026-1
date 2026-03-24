@@ -1,0 +1,12 @@
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\bin\Debug\net8.0\Octopath-Traveler-Model.deps.json
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\bin\Debug\net8.0\Octopath-Traveler-Model.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\bin\Debug\net8.0\Octopath-Traveler-Model.pdb
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.AssemblyInfoInputs.cache
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.AssemblyInfo.cs
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.csproj.CoreCompileInputs.cache
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.sourcelink.json
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\refint\Octopath-Traveler-Model.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.pdb
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\ref\Octopath-Traveler-Model.dll
