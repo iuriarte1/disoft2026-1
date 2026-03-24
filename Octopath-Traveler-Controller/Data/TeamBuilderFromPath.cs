@@ -21,23 +21,23 @@ public class TeamBuilderFromPath
         _beastsDatabase = beastsDatabase;
     }
 
-    public (List<Traveler> Travelers, List<Beast> Beasts)? BuildTeams(string filePath)
+    // Ahora además retorna IsValid para que el llamador pueda detenerse si es inválido
+    public (List<Traveler> Travelers, List<Beast> Beasts, bool IsValid) BuildTeams(string filePath)
     {
-        // Paso 1: Sacamos las líneas completas (separando jugadores de enemigos)
         ExtractLinesFromFile(filePath);
 
-        // Paso 2 y 3: Convertimos las líneas en objetos reales
         var travelerParser = new TravelerParser(_view, _travelersDatabase);
-        List<Traveler> playerTeam = travelerParser.ParseTeam(PlayerLines);
+        List<Traveler> playerTeam = travelerParser.ParseTeam(PlayerLines) ?? new List<Traveler>();
+
         var beastParser = new BeastParser(_view, _beastsDatabase);
-        List<Beast> enemyTeam = beastParser.ParseTeam(EnemyLines);
+        List<Beast> enemyTeam = beastParser.ParseTeam(EnemyLines) ?? new List<Beast>();
 
-        if (playerTeam == null || enemyTeam == null)
-        {
-            return null; // Si algo falló, devolvemos null
-        }
+        var validator = new TeamValidationService(_view);
+        bool travelersOk = validator.ValidateTravelers(playerTeam);
+        bool beastsOk = validator.ValidateBeasts(enemyTeam);
 
-        return (playerTeam, enemyTeam);
+        bool isValid = travelersOk && beastsOk;
+        return (playerTeam, enemyTeam, isValid);
     }
 
     private void ExtractLinesFromFile(string filePath)
@@ -83,6 +83,4 @@ public class TeamBuilderFromPath
             EnemyLines.Add(line);
         }
     }
-    
-    
 }
