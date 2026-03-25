@@ -1,5 +1,6 @@
 using Octopath_Traveler_View;
 using Octopath_Traveler_Model;
+using Octopath_Traveler.Controllers;
 using Octopath_Traveler.Data;
 namespace Octopath_Traveler;
 
@@ -21,39 +22,17 @@ public class Game
         string selectedTeamFile = EncargadoDeArchivosParaTest();
         LoadDatabases();
 
-        var teamBuilder = new TeamBuilderFromPath(_view, _travelersDatabase,_beastsDatabase);
+        var teamBuilder = new TeamBuilderFromPath(_view, _travelersDatabase, _beastsDatabase);
         var teams = teamBuilder.BuildTeams(selectedTeamFile);
 
         // Si el archivo de equipos fue inválido, detener la ejecución inmediatamente.
         if (!teams.IsValid) return;
 
-        _view.WriteLine("----------------------------------------");
-
-        if (teams.Travelers.Count > 0)
-        {
-            _view.WriteLine("Viajeros parseados:");
-            foreach (var t in teams.Travelers)
-            {
-                _view.WriteLine($"- {t.Name}");
-            }
-        }
-        else
-        {
-            _view.WriteLine("No se pudieron parsear viajeros.");
-        }
-
-        if (teams.Beasts.Count > 0)
-        {
-            _view.WriteLine("Bestias parseadas:");
-            foreach (var b in teams.Beasts)
-            {
-                _view.WriteLine($"- {b.Name}");
-            }
-        }
-        else
-        {
-            _view.WriteLine("No se pudieron parsear bestias.");
-        }
+        // --- ¡AQUÍ ESTÁ LA MAGIA! ---
+        // Le entregamos los equipos validados al CombatManager y arrancamos el juego
+        
+        var combatManager = new CombatManager(_view, teams.Travelers, teams.Beasts);
+        combatManager.StartBattle();
     }
     private void LoadDatabases()
     {

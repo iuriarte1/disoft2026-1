@@ -20,33 +20,31 @@ public class SkillParser
     {
         return GetSkillsFromFile(skillNames, _pathPassiveSkills);
     }
-    public List<Skill> GetSkillsForBeast(List<string> skillNames)
+    public Skill GetSkillForBeast(string skillName)
     {
-         return GetSkillsFromFile(skillNames, _pathBeastSkills);
+        return GetOneSkillFromFile(skillName, _pathBeastSkills);
     }
     private List<Skill> GetSkillsFromFile(List<string> namesToFind, string jsonPath)
     {
-        var loader = new JsonInfoLoader();
-        // Asumo que tu JsonInfoLoader tiene un método para cargar una lista de Skills
-        List<Skill> allAvailableSkills = loader.LoaderSkills(jsonPath); 
-
-        List<Skill> result = new();
-
+        var result = new List<Skill>();
         foreach (string name in namesToFind)
         {
-            // Buscamos el objeto Skill que coincida con el nombre escrito en el .txt
-            Skill match = allAvailableSkills.FirstOrDefault(s => s.Name == name);
-
+            Skill match = GetOneSkillFromFile(name, jsonPath);
             if (match == null)
             {
-                // Si una habilidad no existe, devolvemos null para que el TeamBuilder
-                // sepa que el archivo de equipos no es válido.
-                return null; 
+                return null;
             }
-
             result.Add(match);
         }
-
         return result;
+    }
+    public Skill GetOneSkillFromFile(string skillName, string jsonPath)
+    {
+        var loader = new JsonInfoLoader();
+        List<Skill> allAvailableSkills = loader.LoaderSkills(jsonPath);
+
+        if (allAvailableSkills == null) return null;
+
+        return allAvailableSkills.FirstOrDefault(s => s.Name == skillName);
     }
 }

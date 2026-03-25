@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
+using Octopath_Traveler.Actions;
 
 namespace Octopath_Traveler.Controllers;
 
@@ -40,15 +38,37 @@ public class CombatManager
 
     private void ExecuteRound()
     {
-        // Regla de Octopath: El orden se define por Speed (Cap. 2: Nombres significativos)
-        List<Unit> turnOrder = GetTurnOrder();
+        // 1. Mostrar estado de los equipos (Usando tu TeamManager)
+        var gameStateManager = new StateManager(_view, _playerTeam, _enemyTeam);
+        gameStateManager.GameStateStatsMessage();
 
-        foreach (Unit unit in turnOrder)
+        // 2. TIMELINE: Usamos tu brillante idea del TurnManager
+        var turnManager = new TurnManager(_playerTeam, _enemyTeam);
+        
+        List<Unit> currentTurns = turnManager.GetCurrentRoundTurns();
+        List<Unit> nextTurns = turnManager.GetNextRoundTurns();
+
+        // 3. Le pasamos a tu View las listas de nombres generadas por el TurnManager
+        _view.ShowTurnsMessage(
+            turnManager.GetTurnNames(currentTurns), 
+            turnManager.GetTurnNames(nextTurns)
+        );
+
+        // 4. Ejecutar la acción de cada unidad en orden
+        foreach (Unit unit in currentTurns)
         {
-            if (unit.CurrentHp <= 0) continue; // Los caídos no actúan
-            if (!IsBattleOngoing()) break;     // Si la pelea termina a mitad de ronda
+            if (unit.IsDead) continue; // Por si lo mataron en un turno anterior de esta misma ronda
+            if (!IsBattleOngoing()) break;
 
             ProcessUnitTurn(unit);
+        }
+        // 5. Al final de la ronda, regenerar BP de los viajeros vivos
+        foreach (var traveler in _playerTeam)
+        {
+            if (traveler.CurrentHp > 0)
+            {
+                traveler.CurrentBp++;
+            }
         }
     }
 
@@ -77,12 +97,37 @@ public class CombatManager
 
     private void HandlePlayerTurn(Traveler traveler)
     {
-        _view.WriteLine($"\nTurno de {traveler.Name} (HP: {traveler.CurrentHp}/{traveler.BaseStats.MaxHp}, SP: {traveler.CurrentSp})");
+        // 1. Mostrar el menú ("1: Ataque básico", "2: Usar habilidad"...)
+        _view.ShowOptionsTavelerMessage(traveler.Name, traveler.Optionsattack);
         
-        // Aquí llamarías a un método de tu View para mostrar el menú de opciones
-        // Por ahora simularemos la elección básica de atacar al primer enemigo vivo
-        Beast target = _enemyTeam.First(b => b.CurrentHp > 0);
-        PerformPhysicalAttack(traveler, target);
+        // 2. Leer la decisión del jugador ("1", "2", "3" o "4")
+        string choice = _view.ReadLine();
+
+        // 3. Instanciar la estrategia elegida
+        ICombatAction action;
+        
+        switch (choice)
+        {
+            case "1":
+                action = new BasicAttackAction();
+                break;
+            case "2":
+                action = new UseSkillAction();
+                break;
+            case "3":
+                action = new DefendAction();
+                break;
+            case "4":
+                action = new RunAwayAction();
+                break;
+            default:
+                _view.WriteLine("Opción no válida. Por defecto se realizará un Ataque Básico.");
+                action = new BasicAttackAction();
+                break;
+        }
+
+        // 4. Ejecutar la acción elegida, pasándole todo el contexto
+        action.Execute(traveler, _playerTeam, _enemyTeam, _view);
     }
 
     // --- LÓGICA DEL ENEMIGO (IA Simple) ---

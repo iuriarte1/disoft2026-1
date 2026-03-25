@@ -10,7 +10,7 @@ public class Unit
     // Atributos mutables durante el combate
     public int CurrentHp { get; set; }
     public int CurrentSp { get; set; }
-    public int CurrentBp { get; set; } // Boost Points (0 en E1, pero lo dejamos listo)
+    public int CurrentBp { get; set; } 
 
     public bool IsDead => CurrentHp <= 0;
 

@@ -2,7 +2,7 @@
 
 public class View
 {
-    private readonly string _separator = "----------------------------------------\n";
+    private readonly string _separator = "----------------------------------------";
     private readonly AbstractView _view;
 
     public static View BuildConsoleView()
@@ -33,7 +33,9 @@ public class View
 
     public void ShowRoundMessage(int round)
     {
-        _view.WriteLine(_separator + $"INICIA RONDA {round}" + _separator);
+        _view.WriteLine(_separator);
+        _view.WriteLine("INICIA RONDA " + round);
+        _view.WriteLine(_separator);
     }
 
     public void ShowGameStateTeams(List<string> teamsState)
@@ -55,7 +57,7 @@ public class View
         int indicadorDeTurno = 1;
         foreach (string unit in actualTruns)
         {
-            _view.WriteLine(indicadorDeTurno + ". " + unit);
+            _view.WriteLine(indicadorDeTurno + "." + unit);
                 indicadorDeTurno++;
         }
     }
@@ -66,9 +68,55 @@ public class View
         int indicadorDeTurno = 1;
         foreach (string unit in FutureTruns)
         {
-            _view.WriteLine(indicadorDeTurno + ". " + unit);
+            _view.WriteLine(indicadorDeTurno + "." + unit);
             indicadorDeTurno++;
         }
+    }
+
+    public void ShowOptionsTavelerMessage(string unitName, List<string> travelerOptions)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine("Turno de " + unitName);
+        int optionNumber = 1;
+        foreach (string option in travelerOptions)
+        {
+            _view.WriteLine(optionNumber + ": " + option);
+            optionNumber++;
+        }
+    }
+    private void ShowWeaponsAvailableMessage(List<string> weapons)
+    {
+        _view.WriteLine("Seleccione un arma");
+        int optionNumber = 1;
+        foreach (string weapon in weapons)
+        {
+            _view.WriteLine(optionNumber + ": " + weapon);
+            optionNumber++;
+        }
+        _view.WriteLine(optionNumber + ": Cancelar");
+    }
+    public int GetWeaponOption(List<string> weapons)
+    {
+        ShowWeaponsAvailableMessage(weapons);
+        return int.Parse(_view.ReadLine());
+    }
+    
+    public void ShowSkillsAvailableMessage(List<string> skills)
+    {
+        _view.WriteLine("Seleccione una habilidad");
+        int optionNumber = 1;
+        foreach (string skill in skills)
+        {
+            _view.WriteLine(optionNumber + ": " + skill);
+            optionNumber++;
+        }
+        _view.WriteLine(optionNumber + ": Cancelar");
+    }
+    public void ShowBeastAtack(string BeastName, string victimName, int damage, string skillName, int victimHP)
+    {
+        _view.WriteLine(BeastName + " usa " + skillName);
+        _view.WriteLine(victimName + " recibe " + damage + " de daño fisico");
+        _view.WriteLine(victimName + " termina con HP:" + victimHP);
     }
     public string[] GetScript()
         => _view.GetScript();

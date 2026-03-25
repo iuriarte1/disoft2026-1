@@ -32,7 +32,7 @@ public class TeamValidationService
     {
         if (beasts == null) return true;
         if (!ValidateBeastsQuantity(beasts)) return false;
-        if (!ValidateSkillsBeasts(beasts)) return false;
+        //if (!ValidateSkillsBeasts(beasts)) return false;
         if (!ValidateNotRepeatedBeasts(beasts)) return false;
         return true;
     }
@@ -96,7 +96,7 @@ public class TeamValidationService
         foreach (var beast in beasts)
         {
             if (SkipBeast(beast)) continue;
-            if (beast.Skills != null && beast.Skills.Count > PassiveSkillsPerBeast)
+            if (beast.Skill != null)
             {
                 _view.InvalidTeamsFileMessage();
                 return false;

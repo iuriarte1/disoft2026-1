@@ -29,7 +29,7 @@ public class BeastParser
                 return null;
             }
 
-            // Creamos una copia física nueva (Clonación)
+            template.Skill = skillParser.GetSkillForBeast(template.SkillName);
             Beast newBeast = CloneBeast(template);
             
             // Si el día de mañana las bestias tienen habilidades en el .txt 
@@ -49,8 +49,11 @@ public class BeastParser
             Name = template.Name,
             BaseStats = template.BaseStats,
             Weaknesses = template.Weaknesses,
+            Skill = template.Skill,
+            SkillName = template.SkillName,
             CurrentHp = template.BaseStats.MaxHp, // Inicia con vida llena
             CurrentSp = template.BaseStats.MaxSp, // Inicia con SP lleno
+            Shields = template.Shields,
             // Weapons = template.Weapons (Si tus bestias usan armas)
         };
     }
