@@ -5,5 +5,5 @@ namespace Octopath_Traveler.Actions;
 
 public interface ICombatAction
 {
-    void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view);
+    bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view);
 }

@@ -35,11 +35,11 @@ public class View
     {
         _view.WriteLine(_separator);
         _view.WriteLine("INICIA RONDA " + round);
-        _view.WriteLine(_separator);
     }
 
     public void ShowGameStateTeams(List<string> teamsState)
     {
+        _view.WriteLine(_separator);
         foreach (string unitState in teamsState)
         {
             _view.WriteLine(unitState);
@@ -86,6 +86,7 @@ public class View
     }
     private void ShowWeaponsAvailableMessage(List<string> weapons)
     {
+        _view.WriteLine(_separator);
         _view.WriteLine("Seleccione un arma");
         int optionNumber = 1;
         foreach (string weapon in weapons)
@@ -100,10 +101,37 @@ public class View
         ShowWeaponsAvailableMessage(weapons);
         return int.Parse(_view.ReadLine());
     }
-    
-    public void ShowSkillsAvailableMessage(List<string> skills)
+    public void ShowVictimsAvailableMessageForTraveler(List<string> victims, string travelerName)
     {
-        _view.WriteLine("Seleccione una habilidad");
+        _view.WriteLine(_separator);
+        _view.WriteLine("Seleccione un objetivo para " + travelerName);
+        int optionNumber = 1;
+        foreach (string victim in victims)
+        {
+            _view.WriteLine(optionNumber + ": " + victim);
+            optionNumber++;
+        }
+        _view.WriteLine(optionNumber + ": Cancelar");
+    }
+    public int GetVictimOptionForTraveler()
+    {
+        return int.Parse(_view.ReadLine());
+    }
+    // editar en un futuro
+    private void AskHowManyBoostPointsToUse()
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine("Seleccione cuantos BP utilizar");
+    }
+    public int GetHowManyBoostPointsToUse()
+    {
+        AskHowManyBoostPointsToUse();
+        return int.Parse(_view.ReadLine());
+    }
+    private void ShowSkillsAvailableMessage(List<string> skills, string travelerName)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine("Seleccione una habilidad para " + travelerName);
         int optionNumber = 1;
         foreach (string skill in skills)
         {
@@ -112,11 +140,41 @@ public class View
         }
         _view.WriteLine(optionNumber + ": Cancelar");
     }
+
+    public int GetSkillOptionChoosen(List<string> skills, string travelerName)
+    {
+        ShowSkillsAvailableMessage(skills, travelerName);
+        return int.Parse(_view.ReadLine());
+    }
     public void ShowBeastAtack(string BeastName, string victimName, int damage, string skillName, int victimHP)
     {
+        _view.WriteLine(_separator);
         _view.WriteLine(BeastName + " usa " + skillName);
-        _view.WriteLine(victimName + " recibe " + damage + " de daño fisico");
+        _view.WriteLine(victimName + " recibe " + damage + " de daño físico");
         _view.WriteLine(victimName + " termina con HP:" + victimHP);
+    }
+    public void ShowBasicAttackResultMessage(string name, string victimName, string weapon, int damage, int victimHp)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine(name + " ataca");
+        _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + weapon);
+        _view.WriteLine(victimName + " termina con HP:" + victimHp);
+
+    }
+    public void ShowRunAwayMessage()
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine("El equipo de viajeros ha huido!");
+    }
+    public void ShowDefetedTravelerMessage()
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine("Gana equipo del enemigo");
+    }
+    public void ShowVictoryTravelerMessage()
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine("Gana equipo del jugador");
     }
     public string[] GetScript()
         => _view.GetScript();

@@ -6,16 +6,14 @@ public class BeastParser
 {
     private readonly List<Beast> _beastsDatabase;
     private readonly View _view;
-    public BeastParser(View vista, List<Beast> beastsDatabase)
+    public BeastParser(View view, List<Beast> beastsDatabase)
     {
-        _view = vista;
+        _view = view;
         _beastsDatabase = beastsDatabase;
     }
     public List<Beast> ParseTeam(List<string> names)
     {
         List<Beast> team = new();
-        // Si las bestias también tienen habilidades en el JSON, 
-        // podrías instanciar el SkillParser aquí también.
         var skillParser = new SkillParser(new List<string>());
 
         foreach (string name in names)

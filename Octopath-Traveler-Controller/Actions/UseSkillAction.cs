@@ -5,13 +5,45 @@ namespace Octopath_Traveler.Actions;
 
 public class UseSkillAction : ICombatAction
 {
-    public void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
+    private List<string> _skillsNames = new List<string>();
+    private Traveler _actor;
+    private int _indexOfSkillChosen;
+    private View _view;
+    
+    public bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
-        // 1. Mostrar habilidades activas del traveler
-        // 2. Pedir al jugador que elija una
-        // 3. Verificar si tiene SP suficiente
-        // 4. Pedir objetivo (enemigo o aliado dependiendo de la habilidad)
-        // 5. Aplicar efecto y restar SP
-        view.WriteLine($"{actor.Name} se prepara para usar una habilidad... (Lógica en construcción)");
+        _actor = actor;
+        _view = view;
+        SaveSkillsNames();
+        GetSkillChosen();
+        if (!ValidateSkillChosen())
+        {
+            return false;
+        }
+        return true;
+    }
+    //bypaseado para la E2
+    private void GetSkillsAvailable(Traveler traveler)
+    {
+        _skillsNames = traveler.ActiveSkills.Select(s => s.Name).ToList();
+    }
+    private void SaveSkillsNames()
+    {
+        foreach (var skill in _actor.ActiveSkills)
+        {
+            _skillsNames.Add(skill.Name);
+        }
+    }
+    private void GetSkillChosen()
+    {
+        _indexOfSkillChosen = _view.GetSkillOptionChoosen(_skillsNames, _actor.Name);
+    }
+    private bool ValidateSkillChosen()
+    {
+        if (_indexOfSkillChosen > _skillsNames.Count)
+        {
+            return false;
+        }
+        return true;
     }
 }

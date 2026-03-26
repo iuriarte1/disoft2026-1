@@ -2,7 +2,7 @@ using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
 using Octopath_Traveler.Actions;
 
-namespace Octopath_Traveler.Controllers;
+namespace Octopath_Traveler;
 
 public class CombatManager
 {
@@ -10,77 +10,52 @@ public class CombatManager
     private readonly List<Traveler> _playerTeam;
     private readonly List<Beast> _enemyTeam;
     private int _roundCount = 1;
-
+    private bool _travelersRunAway = false;
     public CombatManager(View view, List<Traveler> playerTeam, List<Beast> enemyTeam)
     {
         _view = view;
         _playerTeam = playerTeam;
         _enemyTeam = enemyTeam;
     }
-
-    // Método principal: Orquesta el flujo de la batalla (Cap. 3: Una sola cosa)
     public void StartBattle()
     {
-        while (IsBattleOngoing())
+        while (IsBattleActive())
         {
             _view.ShowRoundMessage(_roundCount);
             ExecuteRound();
+            AwardBoostPoints();
             _roundCount++;
         }
 
         DisplayFinalResult();
     }
-
-    private bool IsBattleOngoing()
+    private bool IsBattleActive()
     {
+        if (_travelersRunAway) return false;
         return _playerTeam.Any(t => t.CurrentHp > 0) && _enemyTeam.Any(b => b.CurrentHp > 0);
     }
-
     private void ExecuteRound()
     {
-        // 1. Mostrar estado de los equipos (Usando tu TeamManager)
-        var gameStateManager = new StateManager(_view, _playerTeam, _enemyTeam);
-        gameStateManager.GameStateStatsMessage();
-
-        // 2. TIMELINE: Usamos tu brillante idea del TurnManager
         var turnManager = new TurnManager(_playerTeam, _enemyTeam);
-        
         List<Unit> currentTurns = turnManager.GetCurrentRoundTurns();
         List<Unit> nextTurns = turnManager.GetNextRoundTurns();
-
-        // 3. Le pasamos a tu View las listas de nombres generadas por el TurnManager
-        _view.ShowTurnsMessage(
-            turnManager.GetTurnNames(currentTurns), 
-            turnManager.GetTurnNames(nextTurns)
-        );
-
-        // 4. Ejecutar la acción de cada unidad en orden
-        foreach (Unit unit in currentTurns)
+        for (int i = 0; i < currentTurns.Count; i++)
         {
-            if (unit.IsDead) continue; // Por si lo mataron en un turno anterior de esta misma ronda
-            if (!IsBattleOngoing()) break;
-
+            Unit unit = currentTurns[i];
+            if (unit.IsDead) continue; 
+            if (!IsBattleActive()) break;
+            List<Unit> remainingTurns = currentTurns.Skip(i).Where(u => !u.IsDead).ToList();
+            List<Unit> aliveNextTurns = nextTurns.Where(u => !u.IsDead).ToList();
+            ShowCurrentGameState(remainingTurns, aliveNextTurns, turnManager);
             ProcessUnitTurn(unit);
         }
-        // 5. Al final de la ronda, regenerar BP de los viajeros vivos
-        foreach (var traveler in _playerTeam)
-        {
-            if (traveler.CurrentHp > 0)
-            {
-                traveler.CurrentBp++;
-            }
-        }
     }
-
-    private List<Unit> GetTurnOrder()
+    private void ShowCurrentGameState(List<Unit> remainingTurns, List<Unit> nextTurns, TurnManager turnManager)
     {
-        // Combinamos ambos equipos y ordenamos por Speed descendente
-        return _playerTeam.Cast<Unit>()
-            .Concat(_enemyTeam.Cast<Unit>())
-            .OrderByDescending(u => u.BaseStats.Speed)
-            .ToList();
+        var gameStateManager = new StateManager(_view, _playerTeam, _enemyTeam);
+        gameStateManager.GameStateStatsMessage();
+        _view.ShowTurnsMessage(turnManager.GetTurnNames(remainingTurns), turnManager.GetTurnNames(nextTurns));
     }
-
     private void ProcessUnitTurn(Unit unit)
     {
         if (unit is Traveler traveler)
@@ -92,93 +67,73 @@ public class CombatManager
             HandleEnemyTurn(beast);
         }
     }
-
-    // --- LÓGICA DEL JUGADOR ---
-
     private void HandlePlayerTurn(Traveler traveler)
     {
-        // 1. Mostrar el menú ("1: Ataque básico", "2: Usar habilidad"...)
-        _view.ShowOptionsTavelerMessage(traveler.Name, traveler.Optionsattack);
-        
-        // 2. Leer la decisión del jugador ("1", "2", "3" o "4")
-        string choice = _view.ReadLine();
+        bool turnCompleted = false; // Bandera para saber si logró actuar
 
-        // 3. Instanciar la estrategia elegida
-        ICombatAction action;
-        
-        switch (choice)
+        // Bucle que atrapa las cancelaciones
+        while (!turnCompleted) 
         {
-            case "1":
-                action = new BasicAttackAction();
-                break;
-            case "2":
-                action = new UseSkillAction();
-                break;
-            case "3":
-                action = new DefendAction();
-                break;
-            case "4":
-                action = new RunAwayAction();
-                break;
-            default:
-                _view.WriteLine("Opción no válida. Por defecto se realizará un Ataque Básico.");
-                action = new BasicAttackAction();
-                break;
+            _view.ShowOptionsTavelerMessage(traveler.Name, traveler.Optionsattack);
+            string choice = _view.ReadLine();
+            ICombatAction action;
+            
+            switch (choice)
+            {
+                case "1":
+                    action = new BasicAttackAction();
+                    break;
+                case "2":
+                    action = new UseSkillAction();
+                    break;
+                case "3":
+                    action = new DefendAction();
+                    break;
+                case "4":
+                    action = new RunAwayAction();
+                    break;
+                default:
+                    action = new BasicAttackAction();
+                    break;
+            }
+
+            // Aquí ejecutamos la acción. 
+            // Si el jugador cancela, action.Execute devuelve 'false', 
+            // turnCompleted sigue siendo 'false', y el while vuelve a empezar el menú.
+            // Si el jugador ataca, devuelve 'true' y rompemos el while.
+            turnCompleted = action.Execute(traveler, _playerTeam, _enemyTeam, _view);
+
+            if (action is RunAwayAction)
+            {
+                _travelersRunAway = true;
+            }
         }
-
-        // 4. Ejecutar la acción elegida, pasándole todo el contexto
-        action.Execute(traveler, _playerTeam, _enemyTeam, _view);
     }
-
-    // --- LÓGICA DEL ENEMIGO (IA Simple) ---
-
     private void HandleEnemyTurn(Beast beast)
     {
-        Traveler target = GetRandomLivingTraveler();
-        if (target != null)
-        {
-            PerformPhysicalAttack(beast, target);
-        }
+        var beastAction = new EnemyTurn(beast, _playerTeam, _view);
+        beastAction.Execute();
     }
-
-    private Traveler GetRandomLivingTraveler()
-    {
-        var livingTravelers = _playerTeam.Where(t => t.CurrentHp > 0).ToList();
-        if (livingTravelers.Count == 0) return null;
-        
-        Random rand = new Random();
-        return livingTravelers[rand.Next(livingTravelers.Count)];
-    }
-
-    // --- ACCIONES DE COMBATE (Cap. 3: Funciones pequeñas) ---
-
-    private void PerformPhysicalAttack(Unit attacker, Unit defender)
-    {
-        // Fórmula básica: Daño = Atk - Def (mínimo 1 de daño)
-        int damage = Math.Max(1, attacker.BaseStats.PhysicalAttack - defender.BaseStats.PhysicalDefense);
-        
-        defender.CurrentHp -= damage;
-        if (defender.CurrentHp < 0) defender.CurrentHp = 0;
-
-        _view.WriteLine($"{attacker.Name} ataca a {defender.Name} causando {damage} de daño.");
-        
-        if (defender.CurrentHp <= 0)
-        {
-            _view.WriteLine($"{defender.Name} ha sido derrotado.");
-        }
-    }
-
     private void DisplayFinalResult()
     {
-        _view.WriteLine("\n========================");
-        if (_playerTeam.Any(t => t.CurrentHp > 0))
+        if (_playerTeam.Any(t => t.CurrentHp > 0) && !_travelersRunAway)
         {
-            _view.WriteLine("¡VICTORIA! El equipo ha sobrevivido.");
+            _view.ShowVictoryTravelerMessage();
         }
         else
         {
-            _view.WriteLine("DERROTA... Todos los viajeros han caído.");
+            _view.ShowDefetedTravelerMessage();
         }
-        _view.WriteLine("========================\n");
+    }
+    // sacar de aca esto quedo solo por la entrega 1
+    private void AwardBoostPoints()
+    {
+        foreach (var traveler in _playerTeam.Where(t => !t.IsDead))
+        {
+            if (traveler.CurrentBp < 5) 
+            {
+                traveler.CurrentBp++;
+            }
+        }
     }
 }

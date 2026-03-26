@@ -1,6 +1,5 @@
 using Octopath_Traveler_View;
 using Octopath_Traveler_Model;
-using Octopath_Traveler.Controllers;
 using Octopath_Traveler.Data;
 namespace Octopath_Traveler;
 

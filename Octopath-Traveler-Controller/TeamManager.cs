@@ -18,6 +18,7 @@ public class TeamManager
         foreach (var unit in _units)
         {
             teamStats.Add( _positionUnitInMessage[positionIndexUnit] + "-" + unit.GetStatsSummary());
+            positionIndexUnit++;
         }
         return teamStats; 
     }
