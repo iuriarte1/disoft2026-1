@@ -140,7 +140,19 @@ public class View
         }
         _view.WriteLine(optionNumber + ": Cancelar");
     }
-
+    private void ShowListOfFilesForTeams(List<string> files)
+    {
+        _view.WriteLine("Elige un archivo para cargar los equipos");
+        for (int i = 0; i < files.Count; i++)
+        {
+            _view.WriteLine($"{i}: {files[i]}");
+        }
+    }
+    public int GetFileOptionForTeams(List<string> files)
+    {
+        ShowListOfFilesForTeams(files);
+        return int.Parse(_view.ReadLine());
+    }
     public int GetSkillOptionChoosen(List<string> skills, string travelerName)
     {
         ShowSkillsAvailableMessage(skills, travelerName);

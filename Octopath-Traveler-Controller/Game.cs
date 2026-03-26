@@ -15,45 +15,26 @@ public class Game
         _view = view;
         _teamsFolder = teamsFolder;
     }
-
     public void Play()
     {
-        string selectedTeamFile = EncargadoDeArchivosParaTest();
+        string selectedTeamFile = TestFilesManager();
         LoadDatabases();
-
         var teamBuilder = new TeamBuilderFromPath(_view, _travelersDatabase, _beastsDatabase);
         var teams = teamBuilder.BuildTeams(selectedTeamFile);
-
-        // Si el archivo de equipos fue inválido, detener la ejecución inmediatamente.
         if (!teams.IsValid) return;
-
-        // --- ¡AQUÍ ESTÁ LA MAGIA! ---
-        // Le entregamos los equipos validados al CombatManager y arrancamos el juego
-        
         var combatManager = new CombatManager(_view, teams.Travelers, teams.Beasts);
         combatManager.StartBattle();
     }
     private void LoadDatabases()
     {
         var loader = new JsonInfoLoader();
-
-        // IMPORTANTE: Revisa que estos sean los nombres exactos de los archivos JSON de tu tarea
-        _travelersDatabase = loader.LoaderTravelers("data/characters.json");
-        _beastsDatabase = loader.LoaderBeasts("data/enemies.json");
+        _travelersDatabase = loader.LoaderTravelersBd("data/characters.json");
+        _beastsDatabase = loader.LoaderBeastsBd("data/enemies.json");
     }
-    private void ImprimirListaDeArchivos(List<string> archivos)
+    private string TestFilesManager()
     {
-        for (int i = 0; i < archivos.Count; i++)
-        {
-            _view.WriteLine($"{i}: {archivos[i]}");
-        }
-    }
-    private string EncargadoDeArchivosParaTest()
-    {
-        _view.WriteLine("Elige un archivo para cargar los equipos");
-        var archivos = new FolderHandler().GainFolderNames(_teamsFolder);
-        ImprimirListaDeArchivos(archivos);
-        var input = int.Parse(_view.ReadLine());
+        var archivos = new FolderHandler().GetFolderNames(_teamsFolder);
+        var input = _view.GetFileOptionForTeams(archivos);
         var ruta = Path.Combine(_teamsFolder, archivos[input]);
         return ruta;
     }

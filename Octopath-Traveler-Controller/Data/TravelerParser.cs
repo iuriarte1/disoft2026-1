@@ -6,7 +6,6 @@ public class TravelerParser
 {
     private readonly View _view;
     private readonly List<Traveler> _travelersDatabase;
-
     public TravelerParser(View view, List<Traveler> travelersDatabase)
     {
         _view = view;
@@ -17,21 +16,15 @@ public class TravelerParser
         List<Traveler> team = new();
         foreach (string line in lines)
         {
-            var parsedData = ExtractData(line);
+            var parsedData = ExtractTravelerDataOfLine(line);
             Traveler template = _travelersDatabase.FirstOrDefault(t => t.Name == parsedData.Name);
-            
             if (template == null)
             {
                 _view.InvalidTeamsFileMessage();
                 return null; 
             }
-            Traveler newTraveler = CloneTraveler(template);
+            Traveler newTraveler = new Traveler(template);
             Traveler finalTraveler = AddSkillsToTraveler(newTraveler, parsedData.ActiveSkills, parsedData.SupportSkills);
-            if (finalTraveler == null)
-            {
-                // Si la asignación de habilidades falló, propagamos el fallo al llamador
-                return null;
-            }
             team.Add(finalTraveler);
         }
         return team;
@@ -41,26 +34,18 @@ public class TravelerParser
         SkillParser skillParser = new SkillParser(new List<string>());
         var active = skillParser.GetActiveSkillsForTraveler(activeSkillNames);
         var passive = skillParser.GetPassiveSkillsForTraveler(supportSkillNames);
-
-        if (active == null || passive == null)
-        {
-            // Indica al llamador que el archivo de equipos es inválido
-            _view.InvalidTeamsFileMessage();
-            return null;
-        }
-
         traveler.ActiveSkills = active;
         traveler.PasiveSkills = passive;
         return traveler;
     }
-    private (string Name, List<string> ActiveSkills, List<string> SupportSkills) ExtractData(string line)
+    private (string Name, List<string> ActiveSkills, List<string> SupportSkills) ExtractTravelerDataOfLine(string line)
     {
-        List<string> activeSkills = ExtractActiveSkills(line);
-        List<string> supportSkills = ExtractSupportSkills(line);
-        string name = ExtractName(line);
+        List<string> activeSkills = ExtractTravelerActiveSkillsNames(line);
+        List<string> supportSkills = ExtractTravelerPassiveSkills(line);
+        string name = ExtractTravelerNameOfLine(line);
         return (name, activeSkills, supportSkills);
     }
-    private string ExtractName(string line)
+    private string ExtractTravelerNameOfLine(string line)
     {
         int primerParentesis = line.IndexOf('(');
         int primerCorchete = line.IndexOf('[');
@@ -69,7 +54,7 @@ public class TravelerParser
         if (primerCorchete != -1) nameEndIndex = Math.Min(nameEndIndex, primerCorchete);
         return line.Substring(0, nameEndIndex).Trim();
     }
-    private List<string> ExtractActiveSkills(string line)
+    private List<string> ExtractTravelerActiveSkillsNames(string line)
     {
         List<string> activeSkills = new();
         int firstParen = line.IndexOf('(');
@@ -84,7 +69,7 @@ public class TravelerParser
         }
         return activeSkills;
     }
-    private List<string> ExtractSupportSkills(string line)
+    private List<string> ExtractTravelerPassiveSkills(string line)
     {
         List<string> supportSkills = new();
         int firstBracket = line.IndexOf('[');
@@ -96,33 +81,5 @@ public class TravelerParser
             }
         }
         return supportSkills;
-    }
-    private Traveler CloneTraveler(Traveler template)
-    {
-        // Clonación defensiva: copiamos los objetos y manejamos posibles nulls
-        Stats baseStatsCopy = template.BaseStats != null
-            ? new Stats
-            {
-                MaxHp = template.BaseStats.MaxHp,
-                MaxSp = template.BaseStats.MaxSp,
-                PhysicalAttack = template.BaseStats.PhysicalAttack,
-                PhysicalDefense = template.BaseStats.PhysicalDefense,
-                ElementalAttack = template.BaseStats.ElementalAttack,
-                ElementalDefense = template.BaseStats.ElementalDefense,
-                Speed = template.BaseStats.Speed,
-                Evasion = template.BaseStats.Evasion
-            }
-            : new Stats { MaxHp = 0, MaxSp = 0 };
-
-        return new Traveler
-        {
-            Name = template.Name,
-            BaseStats = baseStatsCopy,
-            ActiveSkills = template.ActiveSkills != null ? new List<Skill>(template.ActiveSkills) : new List<Skill>(),
-            PasiveSkills = template.PasiveSkills != null ? new List<Skill>(template.PasiveSkills) : new List<Skill>(),
-            CurrentHp = baseStatsCopy.MaxHp,
-            CurrentSp = baseStatsCopy.MaxSp,
-            Weapons = template.Weapons != null ? new List<string>(template.Weapons) : new List<string>()
-        };
     }
 }

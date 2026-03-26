@@ -19,7 +19,7 @@ public class EnemyTurn
         _view = view;
         _travelers = team;
     }
-    public void Execute()
+    public void ExecuteEnemyActionBasedOnSkill()
     {
         GetTravelerAlive(_travelers);
         ChooseVictimHighestHp(_travelersAlive);
@@ -28,7 +28,6 @@ public class EnemyTurn
         _victimHighestHp.TakeDamage(_damage);
         _view.ShowBeastAtack(_actor.Name, _victimHighestHp.Name, _damage, "Attack", _victimHighestHp.CurrentHp);
     }
-
     private void GetTravelerAlive(List<Traveler> travelers)
     {
         _travelersAlive= travelers.Where(t => !t.IsDead).ToList();
@@ -37,13 +36,11 @@ public class EnemyTurn
     {
         _victimHighestHp = travelersAlive.OrderByDescending(t => t.CurrentHp).First();
     }
-
     private void GetDamageFromAttack()
     {
         double damageDecimal =  Math.Floor((double)_actor.BaseStats.PhysicalAttack * _basicAttackModifier - (double)_victimHighestHp.BaseStats.PhysicalDefense);
         _damage = Convert.ToInt32(damageDecimal);
     }
-
     private void DamageValidator()
     {
         if (_damage < 0)

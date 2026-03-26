@@ -13,6 +13,9 @@ public class TeamBuilderFromPath
     private string _currentLineType = "Player";
     private List<string> PlayerLines = new();
     private List<string> EnemyLines = new();
+    private List<Traveler> _travelerInFile;
+    private List<Beast> _beastInFile;
+    private bool _isValidFile;
 
     public TeamBuilderFromPath(View view, List<Traveler> travelersDatabase, List<Beast> beastsDatabase)
     {
@@ -20,34 +23,36 @@ public class TeamBuilderFromPath
         _travelersDatabase = travelersDatabase;
         _beastsDatabase = beastsDatabase;
     }
-
-    // Ahora además retorna IsValid para que el llamador pueda detenerse si es inválido
     public (List<Traveler> Travelers, List<Beast> Beasts, bool IsValid) BuildTeams(string filePath)
     {
-        ExtractLinesFromFile(filePath);
-
-        var travelerParser = new TravelerParser(_view, _travelersDatabase);
-        List<Traveler> playerTeam = travelerParser.ParseTeam(PlayerLines) ?? new List<Traveler>();
-
-        var beastParser = new BeastParser(_view, _beastsDatabase);
-        List<Beast> enemyTeam = beastParser.ParseTeam(EnemyLines) ?? new List<Beast>();
-
-        var validator = new TeamValidationService(_view);
-        bool travelersOk = validator.ValidateTravelers(playerTeam);
-        bool beastsOk = validator.ValidateBeasts(enemyTeam);
-
-        bool isValid = travelersOk && beastsOk;
-        return (playerTeam, enemyTeam, isValid);
+        ParseUnitsFromFilePath(filePath);
+        CheckIfFileIsValid();
+        return (_travelerInFile, _beastInFile, _isValidFile);
     }
-
+    private void ParseUnitsFromFilePath(string filePath)
+    {
+        ExtractLinesFromFile(filePath);
+        var travelerParser = new TravelerParser(_view, _travelersDatabase);
+        _travelerInFile = travelerParser.ParseTeam(PlayerLines) ?? new List<Traveler>();
+        var beastParser = new BeastParser(_view, _beastsDatabase);
+        _beastInFile= beastParser.ParseEnemyTeam(EnemyLines) ?? new List<Beast>();
+    }
+    private void CheckIfFileIsValid()
+    {
+        var validator = new TeamValidationService(_view);
+        bool travelersOk = validator.ValidateTravelers(_travelerInFile);
+        bool beastsOk = validator.ValidateBeasts(_beastInFile);
+        _isValidFile = travelersOk && beastsOk;
+        
+    }
     private void ExtractLinesFromFile(string filePath)
     {
-        string[] lines = File.ReadAllLines(filePath);
-        foreach (string line in lines)
+        var lines = File.ReadAllLines(filePath);
+        foreach (var line in lines)
         {
-            string cleanLine = line.Trim();
+            var cleanLine = line.Trim();
             if (string.IsNullOrWhiteSpace(cleanLine)) continue;
-            if (cleanLine == "Player Team" || cleanLine == "Enemy Team")
+            if (cleanLine is "Player Team" or "Enemy Team")
             {
                 ChangeCurrentLineType(line);
             }

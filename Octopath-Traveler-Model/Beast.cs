@@ -16,4 +16,17 @@ public class Beast : Unit
     {
         return $"{Name} - HP:{CurrentHp}/{BaseStats.MaxHp} Shields:{Shields}";
     }
+    [JsonConstructor]
+    public Beast() {}
+    public Beast(Beast template)
+    {
+        Name = template.Name;
+        BaseStats = template.BaseStats;
+        Weaknesses = template.Weaknesses;
+        Skill = template.Skill;
+        SkillName = template.SkillName;
+        CurrentHp = template.BaseStats.MaxHp;
+        CurrentSp = template.BaseStats.MaxSp;
+        Shields = template.Shields;
+    }
 }

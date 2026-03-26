@@ -23,11 +23,10 @@ public class CombatManager
         {
             _view.ShowRoundMessage(_roundCount);
             ExecuteRound();
-            AwardBoostPoints();
+            GainedBoostPoints();
             _roundCount++;
         }
-
-        DisplayFinalResult();
+        ShowFinalResult();
     }
     private bool IsBattleActive()
     {
@@ -69,15 +68,12 @@ public class CombatManager
     }
     private void HandlePlayerTurn(Traveler traveler)
     {
-        bool turnCompleted = false; // Bandera para saber si logró actuar
-
-        // Bucle que atrapa las cancelaciones
+        bool turnCompleted = false;
         while (!turnCompleted) 
         {
             _view.ShowOptionsTavelerMessage(traveler.Name, traveler.Optionsattack);
             string choice = _view.ReadLine();
             ICombatAction action;
-            
             switch (choice)
             {
                 case "1":
@@ -96,13 +92,7 @@ public class CombatManager
                     action = new BasicAttackAction();
                     break;
             }
-
-            // Aquí ejecutamos la acción. 
-            // Si el jugador cancela, action.Execute devuelve 'false', 
-            // turnCompleted sigue siendo 'false', y el while vuelve a empezar el menú.
-            // Si el jugador ataca, devuelve 'true' y rompemos el while.
             turnCompleted = action.Execute(traveler, _playerTeam, _enemyTeam, _view);
-
             if (action is RunAwayAction)
             {
                 _travelersRunAway = true;
@@ -112,9 +102,9 @@ public class CombatManager
     private void HandleEnemyTurn(Beast beast)
     {
         var beastAction = new EnemyTurn(beast, _playerTeam, _view);
-        beastAction.Execute();
+        beastAction.ExecuteEnemyActionBasedOnSkill();
     }
-    private void DisplayFinalResult()
+    private void ShowFinalResult()
     {
         if (_playerTeam.Any(t => t.CurrentHp > 0) && !_travelersRunAway)
         {
@@ -126,7 +116,7 @@ public class CombatManager
         }
     }
     // sacar de aca esto quedo solo por la entrega 1
-    private void AwardBoostPoints()
+    private void GainedBoostPoints()
     {
         foreach (var traveler in _playerTeam.Where(t => !t.IsDead))
         {

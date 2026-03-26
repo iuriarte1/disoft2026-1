@@ -8,30 +8,23 @@ public class JsonInfoLoader
     {
         PropertyNameCaseInsensitive = true
     };
-
-    public List<Traveler> LoaderTravelers(string filePath)
+    public List<Traveler> LoaderTravelersBd(string filePath)
     {
-        string content = ReadFileContent(filePath);
+        var content = ReadFileContent(filePath);
         return JsonSerializer.Deserialize<List<Traveler>>(content, _jsonOptions) ?? new List<Traveler>();
     }
-
-    public List<Beast> LoaderBeasts(string filePath)
+    public List<Beast> LoaderBeastsBd(string filePath)
     {
-        string content = ReadFileContent(filePath);
+        var content = ReadFileContent(filePath);
         return JsonSerializer.Deserialize<List<Beast>>(content, _jsonOptions) ?? new List<Beast>();
     }
-    public List<Skill> LoaderSkills(string filePath)
+    public List<Skill> LoaderSkillsBd(string filePath)
     {
         string jsonContent = ReadFileContent(filePath);
         return JsonSerializer.Deserialize<List<Skill>>(jsonContent, _jsonOptions) ?? new List<Skill>();
     }
-    
     private string ReadFileContent(string filePath)
     {
-        if (!File.Exists(filePath))
-        {
-            throw new FileNotFoundException($"Archivo no encontrado en la ruta: {filePath}");
-        }
         return File.ReadAllText(filePath);
     }
 }

@@ -6,11 +6,11 @@ namespace Octopath_Traveler.Data;
 public class TeamValidationService
 {
     private View _view;
-    private int ActiveSkillsPerTraveler = 8;
-    private int PassiveSkillsPerTraveler = 4;
-    private int PassiveSkillsPerBeast = 4;
-    private int MaxTravelersPerTeam = 4;
-    private int MaxBeastsPerTeam = 5;
+    private readonly int _activeSkillsPerTraveler = 8;
+    private readonly int _passiveSkillsPerTraveler = 4;
+    private int _passiveSkillsPerBeast = 4;
+    private readonly int _maxTravelersPerTeam = 4;
+    private readonly int _maxBeastsPerTeam = 5;
 
     public TeamValidationService(View view)
     {
@@ -20,10 +20,10 @@ public class TeamValidationService
     public bool ValidateTravelers(List<Traveler> travelers)
     {
         if (travelers == null) return true;
-        if (!ValidateTravelersQuantity(travelers)) return false;
-        if (!ValidateActiveSkillsTravelers(travelers)) return false;
-        if (!ValidatePassiveSkillsTravelers(travelers)) return false;
-        if (!ValidateNotRepeatedTravelers(travelers)) return false;
+        if (!ValidateTravelersQuantitysInPlayerTeam(travelers)) return false;
+        if (!ValidateActiveSkillsQuantityTravelers(travelers)) return false;
+        if (!ValidatePassiveSkillsQuantityTravelers(travelers)) return false;
+        if (!ValidateNotRepeatedTravelersInPlayerTeam(travelers)) return false;
         if (!ValidateNotRepeatedSkillsTravelers(travelers)) return false;
         return true;
     }
@@ -31,43 +31,35 @@ public class TeamValidationService
     public bool ValidateBeasts(List<Beast> beasts)
     {
         if (beasts == null) return true;
-        if (!ValidateBeastsQuantity(beasts)) return false;
-        //if (!ValidateSkillsBeasts(beasts)) return false;
-        if (!ValidateNotRepeatedBeasts(beasts)) return false;
+        if (!ValidateBeastsQuantitysInEnemy(beasts)) return false;
+        if (!ValidateNotRepeatedBeastsInEnemy(beasts)) return false;
         return true;
     }
-
-    private bool SkipTraveler(Traveler traveler) => traveler == null;
-    private bool SkipBeast(Beast beast) => beast == null;
-
-    private bool ValidateBeastsQuantity(List<Beast> beasts)
+    private bool ValidateBeastsQuantitysInEnemy(List<Beast> enemy)
     {
-        if (beasts == null) return true;
-        if (beasts.Count > MaxBeastsPerTeam || beasts.Count < 1)
+        if (enemy == null) return true;
+        if (enemy.Count > _maxBeastsPerTeam || enemy.Count < 1)
         {
             _view.InvalidTeamsFileMessage();
             return false;
         }
         return true;
     }
-
-    private bool ValidateTravelersQuantity(List<Traveler> travelers)
+    private bool ValidateTravelersQuantitysInPlayerTeam(List<Traveler> travelers)
     {
         if (travelers == null) return true;
-        if (travelers.Count > MaxTravelersPerTeam || travelers.Count < 1)
+        if (travelers.Count > _maxTravelersPerTeam || travelers.Count < 1)
         {
             _view.InvalidTeamsFileMessage();
             return false;
         }
         return true;
     }
-
-    private bool ValidateActiveSkillsTravelers(List<Traveler> travelers)
+    private bool ValidateActiveSkillsQuantityTravelers(List<Traveler> travelers)
     {
         foreach (var traveler in travelers)
         {
-            if (SkipTraveler(traveler)) continue;
-            if (traveler.ActiveSkills != null && traveler.ActiveSkills.Count > ActiveSkillsPerTraveler)
+            if (traveler.ActiveSkills != null && traveler.ActiveSkills.Count > _activeSkillsPerTraveler)
             {
                 _view.InvalidTeamsFileMessage();
                 return false;
@@ -75,13 +67,11 @@ public class TeamValidationService
         }
         return true;
     }
-
-    private bool ValidatePassiveSkillsTravelers(List<Traveler> travelers)
+    private bool ValidatePassiveSkillsQuantityTravelers(List<Traveler> travelers)
     {
         foreach (var traveler in travelers)
         {
-            if (SkipTraveler(traveler)) continue;
-            if (traveler.PasiveSkills != null && traveler.PasiveSkills.Count > PassiveSkillsPerTraveler)
+            if (traveler.PasiveSkills != null && traveler.PasiveSkills.Count > _passiveSkillsPerTraveler)
             {
                 _view.InvalidTeamsFileMessage();
                 return false;
@@ -89,28 +79,11 @@ public class TeamValidationService
         }
         return true;
     }
-
-    private bool ValidateSkillsBeasts(List<Beast> beasts)
-    {
-        if (beasts == null) return true;
-        foreach (var beast in beasts)
-        {
-            if (SkipBeast(beast)) continue;
-            if (beast.Skill != null)
-            {
-                _view.InvalidTeamsFileMessage();
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private bool ValidateNotRepeatedTravelers(List<Traveler> travelers)
+    private bool ValidateNotRepeatedTravelersInPlayerTeam(List<Traveler> travelers)
     {
         var names = new HashSet<string>();
         foreach (var t in travelers)
         {
-            if (SkipTraveler(t)) continue;
             if (names.Contains(t.Name))
             {
                 _view.InvalidTeamsFileMessage();
@@ -120,13 +93,11 @@ public class TeamValidationService
         }
         return true;
     }
-
-    private bool ValidateNotRepeatedBeasts(List<Beast> beasts)
+    private bool ValidateNotRepeatedBeastsInEnemy(List<Beast> beasts)
     {
         var names = new HashSet<string>();
         foreach (var b in beasts)
         {
-            if (SkipBeast(b)) continue;
             if (names.Contains(b.Name))
             {
                 _view.InvalidTeamsFileMessage();
@@ -136,18 +107,15 @@ public class TeamValidationService
         }
         return true;
     }
-
     private bool ValidateNotRepeatedSkillsTravelers(List<Traveler> travelers)
     {
         foreach (var traveler in travelers)
         {
-            if (SkipTraveler(traveler)) continue;
             if (!ValidateNotRepeatedSkills(traveler.ActiveSkills)) return false;
             if (!ValidateNotRepeatedSkills(traveler.PasiveSkills)) return false;
         }
         return true;
     }
-
     private bool ValidateNotRepeatedSkills(List<Skill> skills)
     {
         if (skills == null || skills.Count == 0) return true;

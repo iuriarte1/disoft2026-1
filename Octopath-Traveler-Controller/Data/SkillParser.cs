@@ -4,9 +4,9 @@ namespace Octopath_Traveler.Data;
 public class SkillParser
 {
     private List<string> _skills;
-    private string _pathActiveSkills = "data/skills.json";
-    private string _pathBeastSkills = "data/beast_skills.json";
-    private string _pathPassiveSkills = "data/passive_skills.json";
+    private readonly string _pathActiveSkills = "data/skills.json";
+    private readonly string _pathBeastSkills = "data/beast_skills.json";
+    private readonly string _pathPassiveSkills = "data/passive_skills.json";
     public SkillParser(List<string> skills)
      {
          _skills = skills;
@@ -27,7 +27,7 @@ public class SkillParser
     private List<Skill> GetSkillsFromFile(List<string> namesToFind, string jsonPath)
     {
         var result = new List<Skill>();
-        foreach (string name in namesToFind)
+        foreach (var name in namesToFind)
         {
             Skill match = GetOneSkillFromFile(name, jsonPath);
             if (match == null)
@@ -41,10 +41,8 @@ public class SkillParser
     public Skill GetOneSkillFromFile(string skillName, string jsonPath)
     {
         var loader = new JsonInfoLoader();
-        List<Skill> allAvailableSkills = loader.LoaderSkills(jsonPath);
-
+        List<Skill> allAvailableSkills = loader.LoaderSkillsBd(jsonPath);
         if (allAvailableSkills == null) return null;
-
         return allAvailableSkills.FirstOrDefault(s => s.Name == skillName);
     }
 }
