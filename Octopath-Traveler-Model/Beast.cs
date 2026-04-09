@@ -12,6 +12,11 @@ public class Beast : Unit
     // shield
     [JsonPropertyName("Shields")]
     public int Shields { get; set; }
+    [JsonIgnore]
+    public bool IsInBreakingPoint { get; private set; } = false;
+
+    [JsonIgnore]
+    public int MaxShields { get; private set; }
     public override string GetStatsSummary()
     {
         return $"{Name} - HP:{CurrentHp}/{BaseStats.MaxHp} Shields:{Shields}";
@@ -28,5 +33,17 @@ public class Beast : Unit
         CurrentHp = template.BaseStats.MaxHp;
         CurrentSp = template.BaseStats.MaxSp;
         Shields = template.Shields;
+        MaxShields = template.MaxShields;
+    }
+
+    public void EnterBreakingPoint()
+    {
+        IsInBreakingPoint = true;
+        Shields = 0;
+    }
+    public void ExitBreakingPoint()
+    {
+        IsInBreakingPoint = false;
+        Shields = MaxShields;
     }
 }

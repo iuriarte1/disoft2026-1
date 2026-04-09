@@ -158,20 +158,53 @@ public class View
         ShowSkillsAvailableMessage(skills, travelerName);
         return int.Parse(_view.ReadLine());
     }
-    public void ShowBeastAtack(string BeastName, string victimName, int damage, string skillName, int victimHP)
+    public void ShowBeastAtack(string BeastName, string victimName, int damage, string skillName, int victimHp)
     {
         _view.WriteLine(_separator);
         _view.WriteLine(BeastName + " usa " + skillName);
         _view.WriteLine(victimName + " recibe " + damage + " de daño físico");
-        _view.WriteLine(victimName + " termina con HP:" + victimHP);
+        ShowFinalHp(victimName, victimHp);
     }
     public void ShowBasicAttackResultMessage(string name, string victimName, string weapon, int damage, int victimHp)
     {
         _view.WriteLine(_separator);
         _view.WriteLine(name + " ataca");
         _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + weapon);
-        _view.WriteLine(victimName + " termina con HP:" + victimHp);
+        ShowFinalHp(victimName, victimHp);
 
+    }
+
+    public void ShowFinalHp(string victimName, int victimHp)
+    {
+        _view.WriteLine(victimName + " termina con HP:" + victimHp);
+    }
+    public void ShowSkillDamageResult(string victimName, string skillType, int damage)
+    {
+        _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + skillType);
+    }
+    public void ShowSkillDamageResultWithWeakness(string victimName, string skillType, int damage)
+    {
+        _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + skillType + " con debilidad");
+    }
+    public void ShowSkillUsed(string atacante, string skillName)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine(atacante + " usa " + skillName);
+    }
+    public void ShowHealingResult(string targetName, int healAmount)
+    {
+        _view.WriteLine(targetName + " recupera " + healAmount + " de vida");
+    }
+
+    public void ShowReviveResult(string unitRevived)
+    {
+        _view.WriteLine(unitRevived + " revive");
+    }
+    
+    
+    public void ShowBreakingPoint(string victimName)
+    {
+        _view.WriteLine(victimName + " entra en Breaking Point");
     }
     public void ShowRunAwayMessage()
     {

@@ -9,7 +9,12 @@ public class Unit
     public int CurrentHp { get; set; }
     public int CurrentSp { get; set; }
     public int CurrentBp { get; set; } 
-    public bool IsDead => CurrentHp <= 0;
+    public bool IsDead
+    {
+        get => CurrentHp <= 0;
+        set => throw new NotImplementedException();
+    }
+
     public void TakeDamage(int damageAmount)
     {
         CurrentHp -= damageAmount;
@@ -20,5 +25,16 @@ public class Unit
         return $"{Name} - HP:{CurrentHp}/{BaseStats.MaxHp} SP:{CurrentSp}/{BaseStats.MaxSp} BP:{CurrentBp}";
     }
 
+    public void RestoreHp(int healing)
+    {
+        CurrentHp += healing;
+        if  (CurrentHp > BaseStats.MaxHp) CurrentHp = BaseStats.MaxHp;
+    }
+
+    public void Revive()
+    {
+        CurrentHp = 1;
+        IsDead = false;
+    }
     
 }
