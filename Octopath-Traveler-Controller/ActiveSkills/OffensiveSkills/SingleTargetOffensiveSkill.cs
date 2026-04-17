@@ -4,7 +4,7 @@ namespace Octopath_Traveler.ActiveSkills;
 public class SingleTargetOffensiveSkill : OffensiveSkillEffect
 {
     private readonly Beast _victim;
-    public SingleTargetOffensiveSkill(Skill skill, Beast victim) : base(skill)
+    public SingleTargetOffensiveSkill(Skill skill, Beast victim, bool showSkillUsed = true, bool showFinalHp = true) : base(skill, showSkillUsed, showFinalHp)
     {
         _victim = victim;
     }

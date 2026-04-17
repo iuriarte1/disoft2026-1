@@ -5,16 +5,20 @@ namespace Octopath_Traveler.ActiveSkills;
 public abstract class OffensiveSkillEffect : IActiveSkillEffect
 {
     protected readonly Skill _skill;
-
-    protected OffensiveSkillEffect(Skill skill)
+    protected readonly bool _showSkillUsed;
+    protected readonly bool _showFinalHp;
+    protected OffensiveSkillEffect(Skill skill, bool showSkillUsed = true, bool showFinalHp = true)
     {
         _skill = skill;
+        _showSkillUsed = showSkillUsed;
+        _showFinalHp = showFinalHp;
     }
 
-    public void Execute(Traveler atacante, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
+    public virtual void Execute(Traveler atacante, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
         var victims = SelectVictims(enemyTeam);
-        view.ShowSkillUsed(atacante.Name, _skill.Name);
+        if (_showSkillUsed)
+            view.ShowSkillUsed(atacante.Name, _skill.Name);
         ApplyDamageToVictims(atacante, victims, view);
     }
 
@@ -23,7 +27,7 @@ public abstract class OffensiveSkillEffect : IActiveSkillEffect
     {
         foreach (var victim in victims)
         {
-            var (damage, enteredBreakingPoint) = ActiveSkillDamageCalculator.Calculate(atacante, victim, _skill);
+            var (damage, enteredBreakingPoint) = CalculateDamage(atacante, victim);
             victim.TakeDamage(damage);
             ShowDamageMessage(victim, damage, view);
             if (enteredBreakingPoint)
@@ -34,8 +38,14 @@ public abstract class OffensiveSkillEffect : IActiveSkillEffect
 
         ShowFinalHpOfVictims(victims, view);
     }
+
+    protected virtual (int damage, bool enteredBreakingPoint) CalculateDamage(Traveler atacante, Beast victim)
+    {
+        return ActiveSkillDamageCalculator.Calculate(atacante, victim, _skill);
+    }
     private void ShowFinalHpOfVictims(List<Beast> victims, View view)
     {
+        if (!_showFinalHp) return;
         foreach (var victim in victims)
         {
             view.ShowFinalHp(victim.Name, victim.CurrentHp);

@@ -21,11 +21,19 @@ public class TurnManager
     {
         return _allCombatants
             .Where(u => !u.IsDead)
-            .OrderByDescending(u => u.BaseStats.Speed) 
+            .OrderBy(GetTurnCategory)
+            .ThenByDescending(u => u.BaseStats.Speed)
             .ToList();
     }
     public List<string> GetTurnNames(List<Unit> turnList)
     {
         return turnList.Select(u => u.Name).ToList();
+    }
+    private int GetTurnCategory(Unit unit)
+    {
+        if (unit is Beast beast && beast.IsInBreakingPoint) return 0;
+        if (unit.HasTurnPriorityFromSkillOrDef) return 1;
+        if (unit is Beast b && b.RoundsInLastTurn > 0) return 3;
+        return 2;
     }
 }

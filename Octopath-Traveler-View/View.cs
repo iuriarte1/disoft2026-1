@@ -195,6 +195,10 @@ public class View
     {
         _view.WriteLine(targetName + " recupera " + healAmount + " de vida");
     }
+    public void ShowLegholdTrapEffect(string victimName, int roundsInLastPlace)
+    {
+        _view.WriteLine(victimName + " tendrá menor prioridad de turno durante " + roundsInLastPlace + " rondas");
+    }
 
     public void ShowReviveResult(string unitRevived)
     {

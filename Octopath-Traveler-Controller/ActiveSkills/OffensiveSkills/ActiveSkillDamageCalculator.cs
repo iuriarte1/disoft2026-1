@@ -9,11 +9,20 @@ public class ActiveSkillDamageCalculator
 
     public static (int damage, bool enteredBreakingPoint) Calculate(Traveler actor, Beast victim, Skill skill)
     {
+        (double rawDamage,bool enteredBreakingPoint )= CalculateRawDamageAndShieldReduction(actor, victim, skill);
+        int finalDamage = Convert.ToInt32(Math.Floor(rawDamage));
+        return (Math.Max(finalDamage, 0), enteredBreakingPoint);
+    }
+
+
+
+    public static (double rawDamage, bool enteredBreakingPoint) CalculateRawDamageAndShieldReduction(Traveler actor, Beast victim,
+        Skill skill)
+    {
         double baseDamage = GetBaseDamage(actor, victim, skill);
         bool enteredBreakingPoint = ShieldManager.TryReduceShield(victim, skill.Type, baseDamage);
         double multiplier = GetDamageMultiplier(victim, skill);
-        int finalDamage = Convert.ToInt32(Math.Floor(baseDamage * multiplier));
-        return (Math.Max(finalDamage, 0), enteredBreakingPoint);
+        return (baseDamage * multiplier, enteredBreakingPoint);
     }
     private static double GetBaseDamage(Traveler actor, Beast victim, Skill skill)
     {

@@ -48,6 +48,7 @@ public class CombatManager
             ShowCurrentGameState(remainingTurns, aliveNextTurns, turnManager);
             ProcessUnitTurn(unit);
         }
+        EndOfRoundCleanupPrioritysAndLastPosition();
     }
     private void ShowCurrentGameState(List<Unit> remainingTurns, List<Unit> nextTurns, TurnManager turnManager)
     {
@@ -125,5 +126,13 @@ public class CombatManager
                 traveler.CurrentBp++;
             }
         }
+    }
+    private void EndOfRoundCleanupPrioritysAndLastPosition()
+    {
+        foreach (var traveler in _playerTeam)
+            traveler.HasTurnPriorityFromSkillOrDef = false;
+
+        foreach (var beast in _enemyTeam.Where(b => b.RoundsInLastTurn > 0))
+            beast.RoundsInLastTurn--;
     }
 }

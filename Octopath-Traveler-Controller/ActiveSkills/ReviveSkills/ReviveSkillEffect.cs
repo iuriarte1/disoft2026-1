@@ -12,7 +12,7 @@ public abstract class ReviveSkillEffect : IActiveSkillEffect
         _skill = skill;
     }
 
-    public void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
+    public virtual void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
         var travelersToRevive = SelectTravelersToRevive(playerTeam);
         view.ShowSkillUsed(actor.Name, _skill.Name);

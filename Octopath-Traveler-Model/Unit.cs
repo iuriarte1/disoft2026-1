@@ -15,6 +15,9 @@ public class Unit
         set => throw new NotImplementedException();
     }
 
+    public bool HasTurnPriorityFromSkillOrDef { get; set; } = false;
+    public int RoundsInLastTurn { get; set; } = 0;
+
     public void TakeDamage(int damageAmount)
     {
         CurrentHp -= damageAmount;

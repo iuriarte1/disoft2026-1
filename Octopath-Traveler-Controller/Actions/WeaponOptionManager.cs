@@ -1,3 +1,4 @@
+
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
 
@@ -10,11 +11,13 @@ public class WeaponOptionManager
     private List<string> _weaponsNames;
     private string _weaponChoosenName;
     private int _weaponChoosenIndex;
-    public WeaponOptionManager(View view, Traveler actor)
+    private bool _choosingWeaponForSkill;
+    public WeaponOptionManager(View view, Traveler actor, bool weaponForSkill = false)
     {
         _view = view;
         _actor = actor;
         _weaponsNames = new List<string>();
+        _choosingWeaponForSkill = weaponForSkill;
     }
     private void GetWeaponsNamesFormActor()
     {
@@ -23,6 +26,15 @@ public class WeaponOptionManager
             _weaponsNames.Add(weapon);
         }
     }
+
+    private void GetWeaponsForSkillUse()
+    {
+        foreach (var weapon in AllWeaponsTypes)
+        {
+            _weaponsNames.Add(weapon);
+        }
+    }
+    
     private void GetIndexWeaponChoosenFromConsole()
     {
         _weaponChoosenIndex = _view.GetWeaponOption(_weaponsNames);

@@ -23,14 +23,14 @@ public class VictimOptionManager
     }
     private void SetNamesOfBeasts()
     {
-        foreach (var beast in _enemyTeam)
+        foreach (var beast in _enemyTeam.Where(b => !b.IsDead))
         {
             _namesOfBeasts.Add(beast.Name);
         }
     }
     private void SetBeastsStatsForMessage()
     {
-        foreach (var beast in _enemyTeam)
+        foreach (var beast in _enemyTeam.Where(b => !b.IsDead))
         {
             _beastsStats.Add(beast.GetStatsSummary());
         }
