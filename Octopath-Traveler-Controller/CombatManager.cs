@@ -1,6 +1,7 @@
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
 using Octopath_Traveler.Actions;
+using Octopath_Traveler.PassiveSkills;
 
 namespace Octopath_Traveler;
 
@@ -19,6 +20,8 @@ public class CombatManager
     }
     public void StartBattle()
     {
+        var passiveManager = new PassiveSkillManager(_playerTeam);
+        passiveManager.ApplyBattleStartEffects();
         while (IsBattleActive())
         {
             _view.ShowRoundMessage(_roundCount);
