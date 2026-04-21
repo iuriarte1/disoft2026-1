@@ -19,12 +19,13 @@ public class NightmareChimeraSkillEffect : IActiveSkillEffect
 
     public void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
-        string weapon = new WeaponOptionManager(view, actor).GetWeaponChoosen();
+        string weapon = new WeaponOptionManager(view, actor, true).GetWeaponChoosen();
         if (weapon == null) return;
         Beast victim = new VictimOptionManager(view, enemyTeam.Where(e => !e.IsDead).ToList(), actor.Name).GetVictimChoosen();
         if (victim == null) return;
+        int bp = view.GetHowManyBoostPointsToUse();
         var skillModified = SkillTypeModifiedWithWeapon(weapon);
-        var effect = new SingleTargetOffensiveSkill(skillModified, _victim);
+        var effect = new SingleTargetOffensiveSkill(skillModified, victim);
         effect.Execute(actor, playerTeam, enemyTeam, view);
     }
     private Skill SkillTypeModifiedWithWeapon(string weapon)

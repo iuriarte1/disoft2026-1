@@ -29,9 +29,9 @@ public class WeaponOptionManager
 
     private void GetWeaponsForSkillUse()
     {
-        foreach (var weapon in AllWeaponsTypes)
+        foreach (AllWeaponsTypes weapon in Enum.GetValues<AllWeaponsTypes>())
         {
-            _weaponsNames.Add(weapon);
+            _weaponsNames.Add(weapon.ToString());
         }
     }
     
@@ -50,7 +50,14 @@ public class WeaponOptionManager
     }
     public string GetWeaponChoosen()
     {
-        GetWeaponsNamesFormActor();
+        if (_choosingWeaponForSkill)
+        {
+            GetWeaponsForSkillUse();
+        }
+        else
+        {
+            GetWeaponsNamesFormActor();
+        }
         GetIndexWeaponChoosenFromConsole();
         GetWeaponChoosenNameFromIndex();
         return _weaponChoosenName;
