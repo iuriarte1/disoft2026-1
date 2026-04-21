@@ -35,19 +35,36 @@ public class CombatManager
     }
     private void ExecuteRound()
     {
+        // copiar HasTurnPriorityFromSkill → HasTurnPriorityThisRound
+        foreach (var traveler in _playerTeam)
+            traveler.HasTurnPriorityThisRound = traveler.HasTurnPriorityFromSkill;
+
         var turnManager = new TurnManager(_playerTeam, _enemyTeam);
-        List<Unit> currentTurns = turnManager.GetCurrentRoundTurns();
-        for (int i = 0; i < currentTurns.Count; i++)
+        var alreadyActed = new HashSet<Unit>();
+        
+
+        // resetear HasTurnPriorityFromSkill ya que fue copiado
+        foreach (var traveler in _playerTeam)
+            traveler.HasTurnPriorityFromSkill = false;
+        List<Unit> nextTurns = turnManager.GetNextRoundTurns();
+        while (true)
         {
-            Unit unit = currentTurns[i];
-            if (unit.IsDead) continue; 
-            if (!IsBattleActive()) break;
-            List<Unit> remainingTurns = currentTurns.Skip(i).Where(u => !u.IsDead).ToList();
-            List<Unit> nextTurns = turnManager.GetNextRoundTurns();
-            ShowCurrentGameState(remainingTurns, nextTurns, turnManager);
+            List<Unit> currentTurns = turnManager.GetCurrentRoundTurns()
+                .Where(u => !alreadyActed.Contains(u) && !u.RevivedThisRound)
+                .ToList();
+
+            if (!currentTurns.Any() || !IsBattleActive()) break;
+
+            Unit unit = currentTurns.First();
+            if (unit.IsDead) { alreadyActed.Add(unit); continue; }
+
+            ShowCurrentGameState(currentTurns, nextTurns, turnManager);
             ProcessUnitTurn(unit);
+            alreadyActed.Add(unit);
+            nextTurns = turnManager.GetNextRoundTurns();
         }
-        EndOfRoundCleanupPrioritysAndLastPosition();
+
+        EndOfRoundCleanup();
     }
     private void ShowCurrentGameState(List<Unit> remainingTurns, List<Unit> nextTurns, TurnManager turnManager)
     {
@@ -126,15 +143,16 @@ public class CombatManager
             }
         }
     }
-    private void EndOfRoundCleanupPrioritysAndLastPosition()
+    private void EndOfRoundCleanup()
     {
         foreach (var traveler in _playerTeam)
         {
             traveler.UsedDefender = false;
-            traveler.HasTurnPriorityFromSkill = false;
+            traveler.HasTurnPriorityThisRound = false;
+            traveler.RevivedThisRound = false;
         }
-
         foreach (var beast in _enemyTeam.Where(b => b.RoundsInLastTurn > 0))
             beast.RoundsInLastTurn--;
     }
+
 }

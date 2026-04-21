@@ -23,7 +23,7 @@ public abstract class ReviveSkillEffect : IActiveSkillEffect
     {
         foreach (var traveler in travelersToRevive)
         {
-            
+            traveler.RevivedThisRound = true;
             traveler.Revive();
             view.ShowReviveResult(traveler.Name);
         }

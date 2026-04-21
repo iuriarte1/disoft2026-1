@@ -15,11 +15,14 @@ public class VivifySkillEffect : ReviveSkillEffect
 
     public override void Execute(Traveler user, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
-        base.Execute(user, playerTeam, enemyTeam, view);
+        view.ShowSkillUsed(user.Name, _skill.Name);
+        _travelerToRevive.Revive();
+        view.ShowReviveResult(_travelerToRevive.Name);
         int healing = CalculateHpToRestore(user);
         _travelerToRevive.RestoreHp(healing);
         view.ShowHealingResult(_travelerToRevive.Name, healing);
         view.ShowFinalHp(_travelerToRevive.Name, _travelerToRevive.CurrentHp);
+        _travelerToRevive.RevivedThisRound = true;
     }
     private int CalculateHpToRestore(Traveler user)
     {
