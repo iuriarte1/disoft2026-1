@@ -7,43 +7,35 @@ public class DamageManager
 {
     private Beast _victim;
     private Traveler _actor;
-    private int _damage;
-    private double _basicAttackModifier = 1.3;
     private View _view;
     private string _weapon;
-    
-    public DamageManager( Traveler actor, Beast victim, string weapon, View view)
+    private const double BasicAttackModifier = 1.3;
+
+    public DamageManager(Traveler actor, Beast victim, string weapon, View view)
     {
         _actor = actor;
         _victim = victim;
         _view = view;
         _weapon = weapon;
     }
-    private void DamageCalculation()
-    {
-        double damageDecimal =  Math.Floor((double)_actor.BaseStats.PhysicalAttack * _basicAttackModifier - (double)_victim.BaseStats.PhysicalDefense);
-        _damage = Convert.ToInt32(damageDecimal);
-    }
-    private void DamageValidator()
-    {
-        if (_damage < 0)
-        {
-            _damage = 0;
-        }
-    }
-    private void VictimTakeDamage()
-    {
-        _victim.TakeDamage(_damage);
-    }
-    private void ShowDamageResultMessageInConsole()
-    {
-        _view.ShowBasicAttackResultMessage(_actor.Name, _victim.Name, _weapon, _damage, _victim.CurrentHp);
-    }
+
     public void Execute()
     {
-        DamageCalculation();
-        DamageValidator();
-        VictimTakeDamage();
-        ShowDamageResultMessageInConsole();
+        var (damage, enteredBreakingPoint) = DamageCalculator.Calculate(
+            _actor, _victim, _weapon, BasicAttackModifier);
+        _victim.TakeDamage(damage);
+        ShowDamageMessage(damage);
+        if (enteredBreakingPoint)
+            _view.ShowBreakingPoint(_victim.Name);
+        
+    }
+
+    private void ShowDamageMessage(int damage)
+    {
+        bool isWeakness = _victim.Weaknesses.Contains(_weapon);
+        if (isWeakness)
+            _view.ShowBasicAttackWithWeaknessResultMessage(_actor.Name, _victim.Name, _weapon, damage, _victim.CurrentHp);
+        else
+            _view.ShowBasicAttackResultMessage(_actor.Name, _victim.Name, _weapon, damage, _victim.CurrentHp);
     }
 }

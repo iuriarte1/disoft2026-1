@@ -8,7 +8,7 @@ public class DefendAction : ICombatAction
     public bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
 
-        // E2 
+        actor.UsedDefender = true;
         return true;
     }
 }

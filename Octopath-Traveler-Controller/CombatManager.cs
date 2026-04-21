@@ -37,15 +37,14 @@ public class CombatManager
     {
         var turnManager = new TurnManager(_playerTeam, _enemyTeam);
         List<Unit> currentTurns = turnManager.GetCurrentRoundTurns();
-        List<Unit> nextTurns = turnManager.GetNextRoundTurns();
         for (int i = 0; i < currentTurns.Count; i++)
         {
             Unit unit = currentTurns[i];
             if (unit.IsDead) continue; 
             if (!IsBattleActive()) break;
             List<Unit> remainingTurns = currentTurns.Skip(i).Where(u => !u.IsDead).ToList();
-            List<Unit> aliveNextTurns = nextTurns.Where(u => !u.IsDead).ToList();
-            ShowCurrentGameState(remainingTurns, aliveNextTurns, turnManager);
+            List<Unit> nextTurns = turnManager.GetNextRoundTurns();
+            ShowCurrentGameState(remainingTurns, nextTurns, turnManager);
             ProcessUnitTurn(unit);
         }
         EndOfRoundCleanupPrioritysAndLastPosition();
@@ -130,7 +129,10 @@ public class CombatManager
     private void EndOfRoundCleanupPrioritysAndLastPosition()
     {
         foreach (var traveler in _playerTeam)
-            traveler.HasTurnPriorityFromSkillOrDef = false;
+        {
+            traveler.UsedDefender = false;
+            traveler.HasTurnPriorityFromSkill = false;
+        }
 
         foreach (var beast in _enemyTeam.Where(b => b.RoundsInLastTurn > 0))
             beast.RoundsInLastTurn--;

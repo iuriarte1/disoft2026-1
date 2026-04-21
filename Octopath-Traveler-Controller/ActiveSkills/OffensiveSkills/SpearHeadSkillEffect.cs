@@ -15,6 +15,6 @@ public class SpearHeadSkillEffect : SingleTargetOffensiveSkill
     public override void Execute(Traveler user, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
         base.Execute(user, playerTeam, enemyTeam, view);
-        _user.HasTurnPriorityFromSkillOrDef = true;
+        _user.HasTurnPriorityFromSkill = true;
     }
 }

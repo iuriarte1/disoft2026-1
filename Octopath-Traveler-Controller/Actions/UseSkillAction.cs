@@ -84,9 +84,9 @@ public class UseSkillAction : ICombatAction
                 if (SkillSelectsWeaponFirst()) return true;
                 _victimChosen = new VictimOptionManager(_view, _enemyTeam, _actor.Name).GetVictimChoosen();
                 return _victimChosen != null;
-            //case "Ally":
-            //    _allyChosen = new AllyOptionManager(_view, _playerTeam, _actor.Name).GetAllyChoosen();
-            //    return _allyChosen != null;
+            case "Ally":
+                _allyChosen = new AllyOptionManager(_view, _playerTeam, _actor.Name, _skillChosen).GetAllyChoosen();
+                return _allyChosen != null;
             case "Enemies":
             case "Party":
             case "User":
@@ -102,4 +102,6 @@ public class UseSkillAction : ICombatAction
     }
     private bool SkillSelectsWeaponFirst()
         => _skillChosen.Name == "Nightmare Chimera";
+    
+    
 }

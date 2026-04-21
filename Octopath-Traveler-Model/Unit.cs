@@ -9,13 +9,12 @@ public class Unit
     public int CurrentHp { get; set; }
     public int CurrentSp { get; set; }
     public int CurrentBp { get; set; } 
-    public bool IsDead
-    {
-        get => CurrentHp <= 0;
-        set => throw new NotImplementedException();
-    }
+    public bool IsDead => CurrentHp <= 0;
+    
+    
 
-    public bool HasTurnPriorityFromSkillOrDef { get; set; } = false;
+    public bool UsedDefender { get; set; } = false;
+    public bool HasTurnPriorityFromSkill { get; set; } = false;
     public int RoundsInLastTurn { get; set; } = 0;
 
     public void TakeDamage(int damageAmount)
@@ -37,7 +36,6 @@ public class Unit
     public void Revive()
     {
         CurrentHp = 1;
-        IsDead = false;
     }
     
 }

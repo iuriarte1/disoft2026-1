@@ -17,6 +17,7 @@ public abstract class HealingSkillEffect : IActiveSkillEffect
         view.ShowSkillUsed(atacante.Name, _skill.Name);
         ApplyHealingToTravelers(atacante, travelersToHeal, view);
     }
+    
     protected abstract List<Traveler> SelectTravelersToHeal(List<Traveler> travelers);
 
     private void ApplyHealingToTravelers(Traveler atacante, List<Traveler> travelersToHeal, View view)

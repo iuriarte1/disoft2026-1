@@ -173,6 +173,14 @@ public class View
         ShowFinalHp(victimName, victimHp);
 
     }
+    public void ShowBasicAttackWithWeaknessResultMessage(string name, string victimName, string weapon, int damage, int victimHp)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine(name + " ataca");
+        _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + weapon + " con debilidad");
+        ShowFinalHp(victimName, victimHp);
+
+    }
 
     public void ShowFinalHp(string victimName, int victimHp)
     {
@@ -224,6 +232,30 @@ public class View
     {
         _view.WriteLine(_separator);
         _view.WriteLine("Gana equipo del jugador");
+    }
+
+    private void ShowAllysAvailableMessage(List<string> allysNames, string travelerName)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine("Seleccione un objetivo para " + travelerName);
+        int optionNumber = 1;
+        foreach (string name in allysNames)
+        {
+            _view.WriteLine(optionNumber + ": " + name);
+            optionNumber++;
+        }
+        _view.WriteLine(optionNumber + ": Cancelar");
+    }
+
+    private int GetAllyOption()
+    {
+        return int.Parse(_view.ReadLine());
+    }
+
+    public int GetAllyChoosen(List<string> allyNames, string travelerName)
+    {
+        ShowAllysAvailableMessage(allyNames, travelerName);
+        return GetAllyOption();
     }
     public string[] GetScript()
         => _view.GetScript();
