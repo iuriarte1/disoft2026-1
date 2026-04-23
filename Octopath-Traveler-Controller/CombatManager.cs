@@ -38,21 +38,12 @@ public class CombatManager
     }
     private void ExecuteRound()
     {
-        // copiar HasTurnPriorityFromSkill → HasTurnPriorityThisRound
         foreach (var traveler in _playerTeam)
-        {
             traveler.HasTurnPriorityThisRound = traveler.HasTurnPriorityFromSkill;
-            traveler.HasDefendPriorityNextRound = false;
-        }
-            
 
         var turnManager = new TurnManager(_playerTeam, _enemyTeam);
         var alreadyActed = new HashSet<Unit>();
         
-
-        // resetear HasTurnPriorityFromSkill ya que fue copiado
-        foreach (var traveler in _playerTeam)
-            traveler.HasTurnPriorityFromSkill = false;
         List<Unit> nextTurns = turnManager.GetNextRoundTurns();
         while (true)
         {
@@ -157,6 +148,7 @@ public class CombatManager
         {
             traveler.IsDefendingThisRound = false;
             traveler.HasTurnPriorityThisRound = false;
+            traveler.HasDefendPriorityNextRound = false; // ← moverlo aquí
             traveler.RevivedThisRound = false;
         }
         foreach (var beast in _enemyTeam)
