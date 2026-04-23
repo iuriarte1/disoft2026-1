@@ -14,7 +14,15 @@ public class Beast : Unit
     public int Shields { get; set; }
     [JsonIgnore]
     public bool IsInBreakingPoint { get; private set; } = false;
+    [JsonIgnore]
+    public int RoundsInBreakingPoint { get; private set; } = 0;
 
+    public void EnterBreakingPoint()
+    {
+        IsInBreakingPoint = true;
+        RoundsInBreakingPoint = 2;  // dura la ronda actual + la siguiente
+        Shields = 0;
+    }
     [JsonIgnore]
     public int MaxShields { get; private set; }
     public override string GetStatsSummary()
@@ -35,15 +43,16 @@ public class Beast : Unit
         Shields = template.Shields;
         MaxShields = template.MaxShields;
     }
-
-    public void EnterBreakingPoint()
-    {
-        IsInBreakingPoint = true;
-        Shields = 0;
-    }
+    
     public void ExitBreakingPoint()
     {
         IsInBreakingPoint = false;
         Shields = MaxShields;
+    }
+    public void TickBreakingPoint()
+    {
+        RoundsInBreakingPoint--;
+        if (RoundsInBreakingPoint == 0)
+            ExitBreakingPoint();
     }
 }

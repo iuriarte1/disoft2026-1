@@ -156,6 +156,13 @@ public class CombatManager
         }
         foreach (var beast in _enemyTeam.Where(b => b.RoundsInLastTurn > 0))
             beast.RoundsInLastTurn--;
+        TickBreakingPointCounters();
     }
-
+    private void TickBreakingPointCounters()
+    {
+        foreach (var beast in _enemyTeam.Where(b => b.IsInBreakingPoint))
+        {
+            beast.TickBreakingPoint();
+        }
+    }
 }

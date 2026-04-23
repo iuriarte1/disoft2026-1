@@ -18,7 +18,7 @@ public class TurnManager
     public List<Unit> GetCurrentRoundTurns()
     {
         return _allCombatants
-            .Where(u => !u.IsDead)
+            .Where(u => !u.IsDead && !IsInBreakingPoint(u))
             .OrderBy(GetCurrentCategory)
             .ThenByDescending(u => u.BaseStats.Speed)
             .ThenBy(GetTravelerPriority)
@@ -29,7 +29,7 @@ public class TurnManager
     public List<Unit> GetNextRoundTurns()
     {
         return _allCombatants
-            .Where(u => !u.IsDead)
+            .Where(u => !u.IsDead && !IsInBreakingPoint(u))
             .OrderBy(GetNextCategory)
             .ThenByDescending(u => u.BaseStats.Speed)
             .ThenBy(GetTravelerPriority)
@@ -61,7 +61,6 @@ public class TurnManager
     // Cat 4: despriorizado
     private int GetNextCategory(Unit unit)
     {
-        if (unit is Beast beast && beast.IsInBreakingPoint) return 0;
         if (unit is Traveler t && t.UsedDefender) return 1;
         if (unit.HasTurnPriorityFromSkill) return 2;
         if (unit is Beast b && b.RoundsInLastTurn > 1) return 4;
@@ -79,4 +78,6 @@ public class TurnManager
         if (unit is Beast b) return _enemies.IndexOf(b);
         return int.MaxValue;
     }
+    private bool IsInBreakingPoint(Unit unit)
+        => unit is Beast beast && beast.IsInBreakingPoint;
 }

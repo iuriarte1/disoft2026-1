@@ -17,30 +17,33 @@ public class BeastAllEnemiesSkill : IBeastSkillEffect
     {
         view.ShowSkillUsed(actor.Name, _skill.Name);
         var aliveTeam = playerTeam.Where(t => !t.IsDead).ToList();
-        foreach (var victim in aliveTeam)
-        {
-            int damage = CalculateDamage(actor, victim);
-            victim.TakeDamage(damage);
-            view.ShowBeastDamage(victim.Name, damage, GetSkillTypeNameForMessage());
-        }
-        ShowFinalHpVicitms(aliveTeam, view);
+        ApplyDamageToTeam(actor, aliveTeam, view);
+        ShowFinalHpOfTeam(aliveTeam, view);
     }
-    private string GetSkillTypeNameForMessage()
+    private void ApplyDamageToTeam(Beast actor, List<Traveler> aliveTeam, View view)
+    {
+        foreach (var victim in aliveTeam)
+            ApplyDamageToVictim(actor, victim, view);
+    }
+
+    private void ApplyDamageToVictim(Beast actor, Traveler victim, View view)
+    {
+        if (victim.UsedDefender)
+            view.ShowTravelerDefending(victim.Name);
+
+        int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);
+        victim.TakeDamage(damage);
+        view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());
+    }
+
+    private string GetAttackTypeName()
     {
         return _skillType == "Phys" ? "físico" : "elemental";
     }
-    private void ShowFinalHpVicitms(List<Traveler> aliveInTeam, View view)
+
+    private void ShowFinalHpOfTeam(List<Traveler> aliveTeam, View view)
     {
-        foreach (var victim in aliveInTeam)
-        {
+        foreach (var victim in aliveTeam)
             view.ShowFinalHp(victim.Name, victim.CurrentHp);
-        }
-    }
-    private int CalculateDamage(Beast actor, Traveler victim)
-    {
-        double raw = _skillType == "Phys"
-            ? actor.BaseStats.PhysicalAttack * _skill.Modifier - victim.BaseStats.PhysicalDefense
-            : actor.BaseStats.ElementalAttack * _skill.Modifier - victim.BaseStats.ElementalDefense;
-        return Convert.ToInt32(Math.Floor(Math.Max(raw, 0)));
     }
 }

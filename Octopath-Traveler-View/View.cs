@@ -170,16 +170,12 @@ public class View
         _view.WriteLine(_separator);
         _view.WriteLine(name + " ataca");
         _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + weapon);
-        ShowFinalHp(victimName, victimHp);
-
     }
     public void ShowBasicAttackWithWeaknessResultMessage(string name, string victimName, string weapon, int damage, int victimHp)
     {
         _view.WriteLine(_separator);
         _view.WriteLine(name + " ataca");
         _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + weapon + " con debilidad");
-        ShowFinalHp(victimName, victimHp);
-
     }
 
     public void ShowFinalHp(string victimName, int victimHp)
@@ -259,6 +255,11 @@ public class View
     public void ShowBeastDamageWithVortalClaw(string victimName, int damage)
     {
         _view.WriteLine(victimName + " recibe " + damage + " de daño");
+    }
+    // funcion de accion defenderse
+    public void ShowTravelerDefending(string travelerName)
+    {
+        _view.WriteLine(travelerName + " se defiende");
     }
     public int GetAllyChoosen(List<string> allyNames, string travelerName)
     {

@@ -27,7 +27,7 @@ public class DamageManager
         ShowDamageMessage(damage);
         if (enteredBreakingPoint)
             _view.ShowBreakingPoint(_victim.Name);
-        
+        _view.ShowFinalHp(_victim.Name, _victim.CurrentHp);
     }
 
     private void ShowDamageMessage(int damage)

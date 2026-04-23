@@ -17,24 +17,21 @@ public class BeastSingleTargetSkill : IBeastSkillEffect
         _skillType = skilltype;
     }
 
-    private string GetSkillTypeNameForMessage()
-    {
-        return _skillType == "Phys" ? "físico" : "elemental";
-    }
     public void Execute(Beast actor, List<Traveler> playerTeam, View view)
     {
         var aliveTeam = playerTeam.Where(t => !t.IsDead).ToList();
         var victim = _victimSelector.SelectVictim(aliveTeam);
-        int damage = CalculateDamage(actor, victim);
+
+        if (victim.UsedDefender)
+            view.ShowTravelerDefending(victim.Name);
+
+        int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);
         victim.TakeDamage(damage);
-        view.ShowBeastAtack(actor.Name, victim.Name, damage, _skill.Name, victim.CurrentHp, GetSkillTypeNameForMessage());
+        view.ShowBeastAtack(actor.Name, victim.Name, damage, _skill.Name, victim.CurrentHp, GetAttackTypeName());
     }
 
-    private int CalculateDamage(Beast actor, Traveler victim)
+    private string GetAttackTypeName()
     {
-        double raw = _skillType == "Phys"
-            ? actor.BaseStats.PhysicalAttack * _skill.Modifier - victim.BaseStats.PhysicalDefense
-            : actor.BaseStats.ElementalAttack * _skill.Modifier - victim.BaseStats.ElementalDefense;
-        return Convert.ToInt32(Math.Floor(Math.Max(raw, 0)));
+        return _skillType == "Phys" ? "físico" : "elemental";
     }
 }

@@ -30,8 +30,8 @@ public static class DamageCalculator
         Traveler actor, Beast victim, string attackType, double modifier)
     {
         double baseDamage = GetBaseDamage(actor, victim, attackType, modifier);
-        bool enteredBreakingPoint = ShieldManager.TryReduceShield(victim, attackType, baseDamage);
         double multiplier = GetDamageMultiplier(victim, attackType);
+        bool enteredBreakingPoint = ShieldManager.TryReduceShield(victim, attackType, baseDamage);
         int finalDamage = Convert.ToInt32(Math.Floor(baseDamage * multiplier));
         return (Math.Max(finalDamage, 0), enteredBreakingPoint);
     }
