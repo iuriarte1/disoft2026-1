@@ -28,7 +28,7 @@ public class BeastAllEnemiesSkill : IBeastSkillEffect
 
     private void ApplyDamageToVictim(Beast actor, Traveler victim, View view)
     {
-        if (victim.UsedDefender)
+        if (victim.IsDefendingThisRound)
             view.ShowTravelerDefending(victim.Name);
 
         int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);

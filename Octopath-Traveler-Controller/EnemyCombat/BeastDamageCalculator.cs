@@ -22,7 +22,7 @@ public class BeastDamageCalculator
 
     private static double ApplyDefendReductionInDamage(Traveler victim, double rawDamage)
     {
-        return victim.UsedDefender
+        return victim.IsDefendingThisRound
             ? rawDamage * DefendDamageMultiplier
             : rawDamage;
     }

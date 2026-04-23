@@ -12,7 +12,8 @@ public class Unit
     public bool IsDead => CurrentHp <= 0;
     public bool RevivedThisRound { get; set; } = false;
     
-
+    public bool HasDefendPriorityNextRound { get; set; } = false;
+    public bool IsDefendingThisRound { get; set; } = false;
     public bool UsedDefender { get; set; } = false;
     public bool HasTurnPriorityFromSkill { get; set; } = false;      // se setea al usar skill
     public bool HasTurnPriorityThisRound { get; set; } = false;      // activo durante la ronda

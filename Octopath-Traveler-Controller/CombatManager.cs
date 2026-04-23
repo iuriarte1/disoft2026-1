@@ -150,6 +150,7 @@ public class CombatManager
     {
         foreach (var traveler in _playerTeam)
         {
+            traveler.IsDefendingThisRound = false;
             traveler.UsedDefender = false;
             traveler.HasTurnPriorityThisRound = false;
             traveler.RevivedThisRound = false;
