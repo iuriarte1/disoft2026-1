@@ -154,6 +154,9 @@ public class CombatManager
             traveler.HasTurnPriorityThisRound = false;
             traveler.RevivedThisRound = false;
         }
+        foreach (var beast in _enemyTeam)
+            beast.JustRecoveredFromBreakingPoint = false; // ← limpiar cada ronda
+    
         foreach (var beast in _enemyTeam.Where(b => b.RoundsInLastTurn > 0))
             beast.RoundsInLastTurn--;
         TickBreakingPointCounters();

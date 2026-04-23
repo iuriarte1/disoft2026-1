@@ -43,11 +43,17 @@ public class Beast : Unit
         Shields = template.Shields;
         MaxShields = template.MaxShields;
     }
-    
+    public void InitializeMaxShields()
+    {
+        MaxShields = Shields;
+    }
+    public bool JustRecoveredFromBreakingPoint { get; set; } = false;
+
     public void ExitBreakingPoint()
     {
         IsInBreakingPoint = false;
         Shields = MaxShields;
+        JustRecoveredFromBreakingPoint = true; // ← marca la prioridad
     }
     public void TickBreakingPoint()
     {

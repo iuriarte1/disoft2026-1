@@ -259,6 +259,7 @@ public class View
     // funcion de accion defenderse
     public void ShowTravelerDefending(string travelerName)
     {
+        _view.WriteLine(_separator);
         _view.WriteLine(travelerName + " se defiende");
     }
     public int GetAllyChoosen(List<string> allyNames, string travelerName)

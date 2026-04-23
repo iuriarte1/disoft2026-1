@@ -25,6 +25,7 @@ public class BeastParser
             }
             template.Skill = skillParser.GetSkillForBeast(template.SkillName);
             Beast newBeast = new Beast(template);
+            newBeast.InitializeMaxShields();
             team.Add(newBeast);
         }
         return team;

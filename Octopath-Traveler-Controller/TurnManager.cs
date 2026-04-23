@@ -29,14 +29,15 @@ public class TurnManager
     public List<Unit> GetNextRoundTurns()
     {
         return _allCombatants
-            .Where(u => !u.IsDead && !IsInBreakingPoint(u))
+            .Where(u => !u.IsDead && (!IsInBreakingPoint(u) || IsExitingBreakingPoint(u)))
             .OrderBy(GetNextCategory)
             .ThenByDescending(u => u.BaseStats.Speed)
             .ThenBy(GetTravelerPriority)
             .ThenBy(GetBoardIndex)
             .ToList();
     }
-
+    private bool IsExitingBreakingPoint(Unit unit)
+        => unit is Beast beast && beast.IsInBreakingPoint && beast.RoundsInBreakingPoint == 1;
     public List<string> GetTurnNames(List<Unit> turnList)
         => turnList.Select(u => u.Name).ToList();
 
@@ -47,10 +48,11 @@ public class TurnManager
     // Cat 3: despriorizado (Leghold Trap)
     private int GetCurrentCategory(Unit unit)
     {
-        if (unit is Traveler t && t.UsedDefender) return 0;
-        if (unit.HasTurnPriorityThisRound) return 1;  // ← este
-        if (unit is Beast b && b.RoundsInLastTurn > 0) return 3;
-        return 2;
+        if (unit is Beast b && b.JustRecoveredFromBreakingPoint) return 0; // ← cat 0
+        if (unit is Traveler t && t.UsedDefender) return 1;
+        if (unit.HasTurnPriorityThisRound) return 2;
+        if (unit is Beast b2 && b2.RoundsInLastTurn > 0) return 4;
+        return 3;
     }
 
     // Categorías para la ronda SIGUIENTE
@@ -61,9 +63,10 @@ public class TurnManager
     // Cat 4: despriorizado
     private int GetNextCategory(Unit unit)
     {
+        if (unit is Beast b && b.RoundsInBreakingPoint == 1) return 0; // ← cat 0: sale de BP
         if (unit is Traveler t && t.UsedDefender) return 1;
         if (unit.HasTurnPriorityFromSkill) return 2;
-        if (unit is Beast b && b.RoundsInLastTurn > 1) return 4;
+        if (unit is Beast b2 && b2.RoundsInLastTurn > 1) return 4;
         return 3;
     }
 
