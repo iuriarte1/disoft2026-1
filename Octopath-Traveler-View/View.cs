@@ -117,7 +117,7 @@ public class View
     {
         return int.Parse(_view.ReadLine());
     }
-    // editar en un futuro
+    
     private void AskHowManyBoostPointsToUse()
     {
         _view.WriteLine(_separator);
@@ -158,11 +158,11 @@ public class View
         ShowSkillsAvailableMessage(skills, travelerName);
         return int.Parse(_view.ReadLine());
     }
-    public void ShowBeastAtack(string BeastName, string victimName, int damage, string skillName, int victimHp)
+    public void ShowBeastAtack(string BeastName, string victimName, int damage, string skillName, int victimHp, string skillType)
     {
         _view.WriteLine(_separator);
         _view.WriteLine(BeastName + " usa " + skillName);
-        _view.WriteLine(victimName + " recibe " + damage + " de daño físico");
+        _view.WriteLine(victimName + " recibe " + damage + " de daño " + skillType);
         ShowFinalHp(victimName, victimHp);
     }
     public void ShowBasicAttackResultMessage(string name, string victimName, string weapon, int damage, int victimHp)
@@ -251,7 +251,12 @@ public class View
     {
         return int.Parse(_view.ReadLine());
     }
-
+    // funciones de ataque de la bestia
+    public void ShowBeastDamage(string victimName, int damage, string attackType)
+    {
+        _view.WriteLine(victimName + " recibe " + damage + " de daño " + attackType);
+    }
+    
     public int GetAllyChoosen(List<string> allyNames, string travelerName)
     {
         ShowAllysAvailableMessage(allyNames, travelerName);

@@ -1,5 +1,6 @@
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
+using Octopath_Traveler.EnemyCombat.BeastSkill;
 
 namespace Octopath_Traveler.Actions;
 
@@ -12,21 +13,16 @@ public class EnemyTurn
     // harcodeadooo
     private double _basicAttackModifier = 1.3;
     private List<Traveler> _travelersAlive;
-    private List<Traveler> _travelers;
+    private List<Traveler> _playerTeam;
     public EnemyTurn(Beast actor,List<Traveler> team, View view)
     {
         _actor = actor;
         _view = view;
-        _travelers = team;
+        _playerTeam = team;
     }
-    public void ExecuteEnemyActionBasedOnSkill()
+    public void Execute()
     {
-        GetTravelerAlive(_travelers);
-        ChooseVictimHighestHp(_travelersAlive);
-        GetDamageFromAttack();
-        DamageValidator();
-        _victimHighestHp.TakeDamage(_damage);
-        _view.ShowBeastAtack(_actor.Name, _victimHighestHp.Name, _damage, "Attack", _victimHighestHp.CurrentHp);
+        new BeastSkillFactory().Create(_actor.Skill).Execute(_actor, _playerTeam, _view);
     }
     private void GetTravelerAlive(List<Traveler> travelers)
     {

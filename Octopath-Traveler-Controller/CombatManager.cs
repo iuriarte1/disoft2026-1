@@ -122,7 +122,7 @@ public class CombatManager
     private void HandleEnemyTurn(Beast beast)
     {
         var beastAction = new EnemyTurn(beast, _playerTeam, _view);
-        beastAction.ExecuteEnemyActionBasedOnSkill();
+        beastAction.Execute();
     }
     private void ShowFinalResult()
     {
