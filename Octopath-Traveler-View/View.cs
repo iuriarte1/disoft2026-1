@@ -256,7 +256,10 @@ public class View
     {
         _view.WriteLine(victimName + " recibe " + damage + " de daño " + attackType);
     }
-    
+    public void ShowBeastDamageWithVortalClaw(string victimName, int damage)
+    {
+        _view.WriteLine(victimName + " recibe " + damage + " de daño");
+    }
     public int GetAllyChoosen(List<string> allyNames, string travelerName)
     {
         ShowAllysAvailableMessage(allyNames, travelerName);

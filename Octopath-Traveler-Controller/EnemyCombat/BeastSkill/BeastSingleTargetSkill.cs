@@ -8,15 +8,18 @@ public class BeastSingleTargetSkill : IBeastSkillEffect
 {
     private static Skill _skill;
     private readonly IVictimSelector _victimSelector;
-
-    public BeastSingleTargetSkill(Skill skill, IVictimSelector victimSelector)
+    private readonly string _skillType;
+    
+    public BeastSingleTargetSkill(Skill skill,string skilltype,  IVictimSelector victimSelector)
     {
         _skill = skill;
         _victimSelector = victimSelector;
+        _skillType = skilltype;
     }
-    private string GetAttackTypeName()
+
+    private string GetSkillTypeNameForMessage()
     {
-        return _skill.Type == "Phys" ? "físico" : "elemental";
+        return _skillType == "Phys" ? "físico" : "elemental";
     }
     public void Execute(Beast actor, List<Traveler> playerTeam, View view)
     {
@@ -24,12 +27,12 @@ public class BeastSingleTargetSkill : IBeastSkillEffect
         var victim = _victimSelector.SelectVictim(aliveTeam);
         int damage = CalculateDamage(actor, victim);
         victim.TakeDamage(damage);
-        view.ShowBeastAtack(actor.Name, victim.Name, damage, _skill.Name, victim.CurrentHp, GetAttackTypeName());
+        view.ShowBeastAtack(actor.Name, victim.Name, damage, _skill.Name, victim.CurrentHp, GetSkillTypeNameForMessage());
     }
 
     private int CalculateDamage(Beast actor, Traveler victim)
     {
-        double raw = _skill.Type == "Phys"
+        double raw = _skillType == "Phys"
             ? actor.BaseStats.PhysicalAttack * _skill.Modifier - victim.BaseStats.PhysicalDefense
             : actor.BaseStats.ElementalAttack * _skill.Modifier - victim.BaseStats.ElementalDefense;
         return Convert.ToInt32(Math.Floor(Math.Max(raw, 0)));

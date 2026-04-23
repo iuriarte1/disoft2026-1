@@ -18,9 +18,10 @@ public class VortalClawSkillEffect : IBeastSkillEffect
         var aliveTeam = playerTeam.Where(t => !t.IsDead).ToList();
         foreach (var victim in aliveTeam)
         {
-            int damage = (int)Math.Floor(victim.CurrentHp / 2.0);
+            int targetHp = (int)Math.Floor(victim.CurrentHp / 2.0);
+            int damage = victim.CurrentHp - targetHp;
             victim.TakeDamage(damage);
-            view.ShowBeastDamage(victim.Name, damage, _skill.Type);
+            view.ShowBeastDamageWithVortalClaw(victim.Name, damage);
         }
         ShowFinalHpVicitms(aliveTeam, view);
     }
