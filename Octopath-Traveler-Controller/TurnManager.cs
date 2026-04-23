@@ -49,7 +49,7 @@ public class TurnManager
     private int GetCurrentCategory(Unit unit)
     {
         if (unit is Beast b && b.JustRecoveredFromBreakingPoint) return 0; // ← cat 0
-        if (unit is Traveler t && t.UsedDefender) return 1;
+        if (unit is Traveler t && t.HasDefendPriorityNextRound) return 1;
         if (unit.HasTurnPriorityThisRound) return 2;
         if (unit is Beast b2 && b2.RoundsInLastTurn > 0) return 4;
         return 3;
@@ -64,7 +64,7 @@ public class TurnManager
     private int GetNextCategory(Unit unit)
     {
         if (unit is Beast b && b.RoundsInBreakingPoint == 1) return 0; // ← cat 0: sale de BP
-        if (unit is Traveler t && t.UsedDefender) return 1;
+        if (unit is Traveler t && t.HasDefendPriorityNextRound) return 1;
         if (unit.HasTurnPriorityFromSkill) return 2;
         if (unit is Beast b2 && b2.RoundsInLastTurn > 1) return 4;
         return 3;
