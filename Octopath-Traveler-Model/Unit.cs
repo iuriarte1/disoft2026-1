@@ -13,6 +13,7 @@ public class Unit
     public bool RevivedThisRound { get; set; } = false;
     
     public bool HasDefendPriorityNextRound { get; set; } = false;
+    public bool HasDefendPriorityThisRound { get; set; } = false;  // ← nueva
     public bool IsDefendingThisRound { get; set; } = false;
     public bool UsedDefender { get; set; } = false;
     public bool HasTurnPriorityFromSkill { get; set; } = false;      // se setea al usar skill

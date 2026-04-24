@@ -39,8 +39,11 @@ public class CombatManager
     private void ExecuteRound()
     {
         foreach (var traveler in _playerTeam)
+        {
             traveler.HasTurnPriorityThisRound = traveler.HasTurnPriorityFromSkill;
-
+            traveler.HasDefendPriorityThisRound = traveler.HasDefendPriorityNextRound;
+            traveler.HasDefendPriorityNextRound = false;
+        }
         var turnManager = new TurnManager(_playerTeam, _enemyTeam);
         var alreadyActed = new HashSet<Unit>();
         
@@ -148,8 +151,8 @@ public class CombatManager
         {
             traveler.IsDefendingThisRound = false;
             traveler.HasTurnPriorityThisRound = false;
-            traveler.HasDefendPriorityNextRound = false; // ← moverlo aquí
             traveler.RevivedThisRound = false;
+            traveler.HasDefendPriorityThisRound = false;  // ← nueva línea
         }
         foreach (var beast in _enemyTeam)
             beast.JustRecoveredFromBreakingPoint = false; // ← limpiar cada ronda
