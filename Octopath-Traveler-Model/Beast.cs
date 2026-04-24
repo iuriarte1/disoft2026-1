@@ -9,7 +9,6 @@ public class Beast : Unit
     public string SkillName { get; set; }
     [JsonIgnore]
     public Skill Skill { get; set; }
-    // shield
     [JsonPropertyName("Shields")]
     public int Shields { get; set; }
     [JsonIgnore]
@@ -48,7 +47,6 @@ public class Beast : Unit
         MaxShields = Shields;
     }
     public bool JustRecoveredFromBreakingPoint { get; set; } = false;
-
     public void ExitBreakingPoint()
     {
         IsInBreakingPoint = false;
@@ -74,7 +72,6 @@ public class Beast : Unit
     }
     public override TurnPriorityCategory GetCategoryForNextRound()
     {
-        // Regla 6 del enunciado: si sale de BP, manda sobre cualquier otra categoría
         if (RoundsInBreakingPoint == 1)
             return TurnPriorityCategory.RecoveringFromBreakingPoint;
         if (RoundsInLastTurn > 1)

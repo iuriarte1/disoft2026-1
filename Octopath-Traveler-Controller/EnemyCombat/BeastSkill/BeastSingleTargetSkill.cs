@@ -22,14 +22,14 @@ public class BeastSingleTargetSkill : IBeastSkillEffect
         var aliveTeam = playerTeam.Where(t => !t.IsDead).ToList();
         var victim = _victimSelector.SelectVictim(aliveTeam);
 
-        view.ShowSkillUsed(actor.Name, _skill.Name);  // encabezado
+        view.ShowSkillUsed(actor.Name, _skill.Name);
 
         if (victim.IsDefendingThisRound)
             view.ShowTravelerDefending(victim.Name);
 
         int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);
         victim.TakeDamage(damage);
-        view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());  // solo el daño
+        view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());
         view.ShowFinalHp(victim.Name, victim.CurrentHp);
     }
 

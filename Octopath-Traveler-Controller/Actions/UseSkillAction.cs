@@ -39,8 +39,6 @@ public class UseSkillAction : ICombatAction
         ExecuteSkillEffect();
         return true;
     }
-    //bypaseado para la E2
-
     private void SaveSkillsNames()
     {
         foreach (var skill in _actor.ActiveSkills.Where(s=> s.SP <= _actor.CurrentSp))

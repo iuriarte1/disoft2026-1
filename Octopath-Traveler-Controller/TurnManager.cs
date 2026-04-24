@@ -12,7 +12,7 @@ public class TurnManager
     {
         _players = players;
         _enemies = enemies;
-        _allCombatants = players.Cast<Unit>().Concat(enemies.Cast<Unit>()).ToList();
+        _allCombatants = players.Concat(enemies.Cast<Unit>()).ToList();
     }
 
     public List<Unit> GetCurrentRoundTurns()

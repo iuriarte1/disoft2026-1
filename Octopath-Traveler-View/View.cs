@@ -247,7 +247,6 @@ public class View
     {
         return int.Parse(_view.ReadLine());
     }
-    // funciones de ataque de la bestia
     public void ShowBeastDamage(string victimName, int damage, string attackType)
     {
         _view.WriteLine(victimName + " recibe " + damage + " de daño " + attackType);
@@ -256,7 +255,6 @@ public class View
     {
         _view.WriteLine(victimName + " recibe " + damage + " de daño");
     }
-    // funcion de accion defenderse
     public void ShowTravelerDefending(string travelerName)
     {
         _view.WriteLine(travelerName + " se defiende");

@@ -30,7 +30,22 @@ public class Traveler : Unit
         HasDefendPriorityThisRound = HasDefendPriorityNextRound;
 
         HasDefendPriorityNextRound = false;
-        HasTurnPriorityFromSkill   = false;  // ← BUG FIX: ahora sí se limpia
+        HasTurnPriorityFromSkill   = false;
+    }
+
+    public void GainedBoostPoint()
+    {
+        if (CurrentBp < 5) 
+        {
+            CurrentBp++;
+        }
+    }
+    public void EndOfRoundCleanUp()
+    {
+        IsDefendingThisRound = false;
+        HasTurnPriorityThisRound = false;
+        RevivedThisRound = false;
+        HasDefendPriorityThisRound = false;
     }
 
 }

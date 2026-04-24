@@ -1,6 +1,7 @@
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
 using Octopath_Traveler.Actions;
+using Octopath_Traveler.EnemyCombat;
 using Octopath_Traveler.PassiveSkills;
 
 namespace Octopath_Traveler;
@@ -129,32 +130,30 @@ public class CombatManager
             _view.ShowDefetedTravelerMessage();
         }
     }
-    // sacar de aca esto quedo solo por la entrega 1
     private void GainedBoostPoints()
     {
         foreach (var traveler in _playerTeam.Where(t => !t.IsDead))
         {
-            if (traveler.CurrentBp < 5) 
-            {
-                traveler.CurrentBp++;
-            }
+            traveler.GainedBoostPoint();
         }
     }
     private void EndOfRoundCleanup()
     {
-        foreach (var traveler in _playerTeam)
-        {
-            traveler.IsDefendingThisRound = false;
-            traveler.HasTurnPriorityThisRound = false;
-            traveler.RevivedThisRound = false;
-            traveler.HasDefendPriorityThisRound = false;  // ← nueva línea
-        }
+        EndOfRoundPlayerTeamCleanUp();
         foreach (var beast in _enemyTeam)
-            beast.JustRecoveredFromBreakingPoint = false; // ← limpiar cada ronda
+            beast.JustRecoveredFromBreakingPoint = false;
     
         foreach (var beast in _enemyTeam.Where(b => b.RoundsInLastTurn > 0))
             beast.RoundsInLastTurn--;
         TickBreakingPointCounters();
+    }
+
+    private void EndOfRoundPlayerTeamCleanUp()
+    {
+        foreach (var traveler in _playerTeam)
+        {
+            traveler.EndOfRoundCleanUp();
+        } 
     }
     private void TickBreakingPointCounters()
     {

@@ -7,7 +7,6 @@ public class BasicAttackAction : ICombatAction
 {
     private string _weaponChoosen;
     private Beast _victimChoosen;
-    // E2
     private int _boostPointsToUse;
     public bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
@@ -28,8 +27,8 @@ public class BasicAttackAction : ICombatAction
     }
     private void GetWeaponToAttack(Traveler actor, View view)
     {
-        var WeaponOptionManager = new WeaponOptionManager(view, actor);
-        _weaponChoosen = WeaponOptionManager.GetWeaponChoosen();
+        var weaponOptionManager = new WeaponOptionManager(view, actor);
+        _weaponChoosen = weaponOptionManager.GetWeaponChoosen();
     }
     private bool WeaponOptionsIsCancel()
     {
@@ -41,8 +40,8 @@ public class BasicAttackAction : ICombatAction
     }
     private void ChooseVictimToAttack(List<Beast> enemyTeam, View view, Traveler actor)
     {
-        var VictimOptionManager = new VictimOptionManager(view, enemyTeam, actor.Name);
-        _victimChoosen = VictimOptionManager.GetVictimChoosen();
+        var victimOptionManager = new VictimOptionManager(view, enemyTeam, actor.Name);
+        _victimChoosen = victimOptionManager.GetVictimChoosen();
     }
     private bool VictimOptionsIsCancel()
     {
