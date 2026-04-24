@@ -7,7 +7,7 @@ public static class DamageCalculator
     private static readonly string[] PhysicalTypes =
         { "Sword", "Spear", "Axe", "Dagger", "Bow", "Stave" };
 
-    public static bool IsPhysical(string attackType)
+    private static bool IsPhysical(string attackType)
         => PhysicalTypes.Contains(attackType);
 
     public static double GetBaseDamage(Traveler actor, Beast victim, string attackType, double modifier)
@@ -19,8 +19,8 @@ public static class DamageCalculator
 
     public static double GetDamageMultiplier(Beast victim, string attackType)
     {
-        bool isWeakness = victim.Weaknesses.Contains(attackType);
-        bool isBreakingPoint = victim.IsInBreakingPoint;
+        var isWeakness = victim.Weaknesses.Contains(attackType);
+        var isBreakingPoint = victim.IsInBreakingPoint;
         if (isWeakness && isBreakingPoint) return 2.0;
         if (isWeakness || isBreakingPoint) return 1.5;
         return 1.0;
@@ -29,10 +29,10 @@ public static class DamageCalculator
     public static (int damage, bool enteredBreakingPoint) Calculate(
         Traveler actor, Beast victim, string attackType, double modifier)
     {
-        double baseDamage = GetBaseDamage(actor, victim, attackType, modifier);
-        double multiplier = GetDamageMultiplier(victim, attackType);
-        bool enteredBreakingPoint = ShieldManager.TryReduceShield(victim, attackType, baseDamage);
-        int finalDamage = Convert.ToInt32(Math.Floor(baseDamage * multiplier));
+        var baseDamage = GetBaseDamage(actor, victim, attackType, modifier);
+        var multiplier = GetDamageMultiplier(victim, attackType);
+        var enteredBreakingPoint = ShieldManager.TryReduceShield(victim, attackType, baseDamage);
+        var finalDamage = Convert.ToInt32(Math.Floor(baseDamage * multiplier));
         return (Math.Max(finalDamage, 0), enteredBreakingPoint);
     }
 }

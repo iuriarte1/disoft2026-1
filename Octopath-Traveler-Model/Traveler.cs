@@ -30,17 +30,17 @@ public class Traveler : Unit
 
     public void PrepareForNewRound()
     {
-        HasTurnPriorityThisRound   = HasTurnPriorityFromSkill;
+        HasTurnPriorityThisRound = HasTurnPriorityFromSkill;
         HasDefendPriorityThisRound = HasDefendPriorityNextRound;
         HasDefendPriorityNextRound = false;
-        HasTurnPriorityFromSkill   = false;
+        HasTurnPriorityFromSkill = false;
     }
 
     public void EndOfRoundCleanUp()
     {
-        IsDefendingThisRound       = false;
-        HasTurnPriorityThisRound   = false;
-        RevivedThisRound           = false;
+        IsDefendingThisRound = false;
+        HasTurnPriorityThisRound = false;
+        RevivedThisRound = false;
         HasDefendPriorityThisRound = false;
     }
 }

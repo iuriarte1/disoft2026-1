@@ -5,7 +5,7 @@ namespace Octopath_Traveler.EnemyCombat.BeastSkill;
 
 public class BeastAllEnemiesSkill : IBeastSkillEffect
 {
-    private static Skill _skill;
+    private readonly Skill _skill;
     private readonly string _skillType;
     public BeastAllEnemiesSkill(Skill skill, string skillType)
     {
@@ -30,7 +30,6 @@ public class BeastAllEnemiesSkill : IBeastSkillEffect
     {
         if (victim.IsDefendingThisRound)
             view.ShowTravelerDefending(victim.Name);
-
         int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);
         victim.TakeDamage(damage);
         view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());

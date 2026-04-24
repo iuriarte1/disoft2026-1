@@ -93,14 +93,14 @@ public class Unit
     public virtual TurnPriorityCategory GetCategoryForCurrentRound()
     {
         if (HasDefendPriorityThisRound) return TurnPriorityCategory.DefendedLastRound;
-        if (HasTurnPriorityThisRound)   return TurnPriorityCategory.PrioritizedBySkill;
+        if (HasTurnPriorityThisRound) return TurnPriorityCategory.PrioritizedBySkill;
         return TurnPriorityCategory.Normal;
     }
 
     public virtual TurnPriorityCategory GetCategoryForNextRound()
     {
         if (HasDefendPriorityNextRound) return TurnPriorityCategory.DefendedLastRound;
-        if (HasTurnPriorityFromSkill)   return TurnPriorityCategory.PrioritizedBySkill;
+        if (HasTurnPriorityFromSkill) return TurnPriorityCategory.PrioritizedBySkill;
         return TurnPriorityCategory.Normal;
     }
 }

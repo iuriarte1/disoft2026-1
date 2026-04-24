@@ -19,7 +19,7 @@ public class Beast : Unit
     public void EnterBreakingPoint()
     {
         IsInBreakingPoint = true;
-        RoundsInBreakingPoint = 2;  // dura la ronda actual + la siguiente
+        RoundsInBreakingPoint = 2;
         Shields = 0;
     }
     [JsonIgnore]
@@ -54,7 +54,7 @@ public class Beast : Unit
         {
             Shields = MaxShields;
         }
-        JustRecoveredFromBreakingPoint = true; // ← marca la prioridad
+        JustRecoveredFromBreakingPoint = true;
     }
     public void TickBreakingPoint()
     {
@@ -77,5 +77,9 @@ public class Beast : Unit
         if (RoundsInLastTurn > 1)
             return TurnPriorityCategory.DeprioritizedBySkill;
         return base.GetCategoryForNextRound();
+    }
+    public void ClearBreakingPointRecovery()
+    {
+        JustRecoveredFromBreakingPoint = false;
     }
 }

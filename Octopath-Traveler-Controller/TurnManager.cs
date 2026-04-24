@@ -16,50 +16,49 @@ public class TurnManager
     }
 
     public List<Unit> GetCurrentRoundTurns()
-        => BuildQueue(
-            filter: CanActThisRound,
-            categorySelector: u => u.GetCategoryForCurrentRound());
-
-    public List<Unit> GetNextRoundTurns()
-        => BuildQueue(
-            filter: WillActNextRound,
-            categorySelector: u => u.GetCategoryForNextRound());
-
-    public List<string> GetTurnNames(List<Unit> turnList)
-        => turnList.Select(u => u.Name).ToList();
-
-    private List<Unit> BuildQueue(
-        Func<Unit, bool> filter,
-        Func<Unit, TurnPriorityCategory> categorySelector)
     {
         return _allCombatants
-            .Where(filter)
-            .OrderBy(categorySelector)
+            .Where(CanActThisRound)
+            .OrderBy(u => u.GetCategoryForCurrentRound())
             .ThenByDescending(u => u.BaseStats.Speed)
-            .ThenBy(GetTravelerPriority)
-            .ThenBy(GetBoardIndex)
+            .ThenBy(IsPlayer)
+            .ThenBy(BoardIndex)
             .ToList();
     }
+
+    public List<Unit> GetNextRoundTurns()
+    {
+        return _allCombatants
+            .Where(WillActNextRound)
+            .OrderBy(u => u.GetCategoryForNextRound())
+            .ThenByDescending(u => u.BaseStats.Speed)
+            .ThenBy(IsPlayer)
+            .ThenBy(BoardIndex)
+            .ToList();
+    }
+
+    public List<string> GetNames(List<Unit> turns)
+        => turns.Select(u => u.Name).ToList();
 
     private bool CanActThisRound(Unit unit)
         => !unit.IsDead && !IsInBreakingPoint(unit);
 
     private bool WillActNextRound(Unit unit)
-        => !unit.IsDead && (!IsInBreakingPoint(unit) || IsExitingBreakingPoint(unit));
+        => !unit.IsDead && (!IsInBreakingPoint(unit) || IsLeavingBreakingPoint(unit));
 
     private bool IsInBreakingPoint(Unit unit)
         => unit is Beast beast && beast.IsInBreakingPoint;
 
-    private bool IsExitingBreakingPoint(Unit unit)
+    private bool IsLeavingBreakingPoint(Unit unit)
         => unit is Beast beast && beast.RoundsInBreakingPoint == 1;
 
-    private int GetTravelerPriority(Unit unit)
+    private int IsPlayer(Unit unit)
         => unit is Traveler ? 0 : 1;
 
-    private int GetBoardIndex(Unit unit)
+    private int BoardIndex(Unit unit)
     {
         if (unit is Traveler t) return _players.IndexOf(t);
-        if (unit is Beast b)    return _enemies.IndexOf(b);
+        if (unit is Beast b) return _enemies.IndexOf(b);
         return int.MaxValue;
     }
 }

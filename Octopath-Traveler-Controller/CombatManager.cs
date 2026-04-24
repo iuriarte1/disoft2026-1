@@ -1,6 +1,7 @@
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
 using Octopath_Traveler.Actions;
+using Octopath_Traveler.Combat;
 using Octopath_Traveler.EnemyCombat;
 using Octopath_Traveler.PassiveSkills;
 
@@ -68,7 +69,7 @@ public class CombatManager
     {
         var gameStateManager = new StateManager(_view, _playerTeam, _enemyTeam);
         gameStateManager.GameStateStatsMessage();
-        _view.ShowTurnsMessage(turnManager.GetTurnNames(remainingTurns), turnManager.GetTurnNames(nextTurns));
+        _view.ShowTurnsMessage(turnManager.GetNames(remainingTurns), turnManager.GetNames(nextTurns));
     }
     private void ProcessUnitTurn(Unit unit)
     {
@@ -83,24 +84,9 @@ public class CombatManager
     }
     private void HandlePlayerTurn(Traveler traveler)
     {
-        bool turnCompleted = false;
-        while (!turnCompleted)
-        {
-            ICombatAction action = AskPlayerForAction(traveler);
-            turnCompleted = action.Execute(traveler, _playerTeam, _enemyTeam, _view);
-            UpdateRunAwayState(action);
-        }
-    }
-    private ICombatAction AskPlayerForAction(Traveler traveler)
-    {
-        _view.ShowOptionsTavelerMessage(traveler.Name, traveler.ActionOptions);
-        string choice = _view.ReadLine();
-        return ActionFactory.Create(choice);
-    }
-
-    private void UpdateRunAwayState(ICombatAction action)
-    {
-        if (action is RunAwayAction)
+        var playerHandler =new PlayerTurnHandler(_view, _playerTeam, _enemyTeam);
+        playerHandler.ExecuteTurn(traveler);
+        if (playerHandler.ranAway) 
             _travelersRunAway = true;
     }
     private void HandleEnemyTurn(Beast beast)
@@ -108,16 +94,13 @@ public class CombatManager
         var beastAction = new EnemyTurn(beast, _playerTeam, _view);
         beastAction.Execute();
     }
+    
     private void ShowFinalResult()
     {
-        if (_playerTeam.Any(t => t.CurrentHp > 0) && !_travelersRunAway)
-        {
+        if (_playerTeam.Any(t => !t.IsDead) && !_travelersRunAway)
             _view.ShowVictoryTravelerMessage();
-        }
         else
-        {
             _view.ShowDefetedTravelerMessage();
-        }
     }
     private void GainedBoostPoints()
     {
@@ -128,27 +111,8 @@ public class CombatManager
     }
     private void EndOfRoundCleanup()
     {
-        EndOfRoundPlayerTeamCleanUp();
-        foreach (var beast in _enemyTeam)
-            beast.JustRecoveredFromBreakingPoint = false;
-    
-        foreach (var beast in _enemyTeam.Where(b => b.RoundsInLastTurn > 0))
-            beast.TickTurnDelay();
-        TickBreakingPointCounters();
+        var clean = new EndOfRoundCleaner(_playerTeam, _enemyTeam);
+        clean.Clean();
     }
 
-    private void EndOfRoundPlayerTeamCleanUp()
-    {
-        foreach (var traveler in _playerTeam)
-        {
-            traveler.EndOfRoundCleanUp();
-        } 
-    }
-    private void TickBreakingPointCounters()
-    {
-        foreach (var beast in _enemyTeam.Where(b => b.IsInBreakingPoint))
-        {
-            beast.TickBreakingPoint();
-        }
-    }
 }
