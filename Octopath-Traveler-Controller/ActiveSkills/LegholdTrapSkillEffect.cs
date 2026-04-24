@@ -17,7 +17,7 @@ public class LegholdTrapSkillEffect :IActiveSkillEffect
     public void Execute(Traveler atacante, List<Traveler> playerTeam,List<Beast> enemyTeam, View view)
     {
         view.ShowSkillUsed(atacante.Name, _name);
-        _victim.RoundsInLastTurn += RoundsInLastPlace;
+        _victim.ApplyTurnDelay(RoundsInLastPlace);
         view.ShowLegholdTrapEffect(_victim.Name, RoundsInLastPlace);
     }
 

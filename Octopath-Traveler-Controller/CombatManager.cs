@@ -84,35 +84,24 @@ public class CombatManager
     private void HandlePlayerTurn(Traveler traveler)
     {
         bool turnCompleted = false;
-        while (!turnCompleted) 
+        while (!turnCompleted)
         {
-            _view.ShowOptionsTavelerMessage(traveler.Name, traveler.Optionsattack);
-            string choice = _view.ReadLine();
-            ICombatAction action;
-            switch (choice)
-            {
-                case "1":
-                    action = new BasicAttackAction();
-                    break;
-                case "2":
-                    action = new UseSkillAction();
-                    break;
-                case "3":
-                    action = new DefendAction();
-                    break;
-                case "4":
-                    action = new RunAwayAction();
-                    break;
-                default:
-                    action = new BasicAttackAction();
-                    break;
-            }
+            ICombatAction action = AskPlayerForAction(traveler);
             turnCompleted = action.Execute(traveler, _playerTeam, _enemyTeam, _view);
-            if (action is RunAwayAction)
-            {
-                _travelersRunAway = true;
-            }
+            UpdateRunAwayState(action);
         }
+    }
+    private ICombatAction AskPlayerForAction(Traveler traveler)
+    {
+        _view.ShowOptionsTavelerMessage(traveler.Name, traveler.ActionOptions);
+        string choice = _view.ReadLine();
+        return ActionFactory.Create(choice);
+    }
+
+    private void UpdateRunAwayState(ICombatAction action)
+    {
+        if (action is RunAwayAction)
+            _travelersRunAway = true;
     }
     private void HandleEnemyTurn(Beast beast)
     {
@@ -134,7 +123,7 @@ public class CombatManager
     {
         foreach (var traveler in _playerTeam.Where(t => !t.IsDead))
         {
-            traveler.GainedBoostPoint();
+            traveler.GainBp();
         }
     }
     private void EndOfRoundCleanup()
@@ -144,7 +133,7 @@ public class CombatManager
             beast.JustRecoveredFromBreakingPoint = false;
     
         foreach (var beast in _enemyTeam.Where(b => b.RoundsInLastTurn > 0))
-            beast.RoundsInLastTurn--;
+            beast.TickTurnDelay();
         TickBreakingPointCounters();
     }
 

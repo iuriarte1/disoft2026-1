@@ -21,7 +21,7 @@ public class ShootingStarsSkillEffect : IActiveSkillEffect
         {
             foreach (var skill in skills)
             {
-                var effect = new SingleTargetOffensiveSkill(skill, victim, false, false);
+                var effect = new SilentSingleTargetSkill(skill, victim);
                 effect.Execute(actor, playerTeam, enemyTeam, view);
             }
         }

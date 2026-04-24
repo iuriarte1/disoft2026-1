@@ -7,12 +7,16 @@ public class Traveler : Unit
     public List<string> Weapons { get; set; } = new List<string>();
     public List<Skill> ActiveSkills { get; set; } = new List<Skill>();
     public List<Skill> PasiveSkills { get; set; } = new List<Skill>();
+
+    public List<string> ActionOptions => new List<string>
+        { "Ataque básico", "Usar habilidad", "Defender", "Huir" };
+
     [JsonConstructor]
     public Traveler()
     {
-        CurrentBp = 1;
+        SetInitialBp(1);
     }
-    public List<string> Optionsattack = ["Ataque básico", "Usar habilidad", "Defender", "Huir"];
+
     public Traveler(Traveler template)
     {
         Name = template.Name;
@@ -20,32 +24,23 @@ public class Traveler : Unit
         ActiveSkills = new List<Skill>(template.ActiveSkills);
         PasiveSkills = new List<Skill>(template.PasiveSkills);
         Weapons = new List<string>(template.Weapons);
-        CurrentHp = BaseStats.MaxHp;
-        CurrentSp = BaseStats.MaxSp;
-        CurrentBp = 1;
+        InitializeCurrentStats();
+        SetInitialBp(1);
     }
+
     public void PrepareForNewRound()
     {
         HasTurnPriorityThisRound   = HasTurnPriorityFromSkill;
         HasDefendPriorityThisRound = HasDefendPriorityNextRound;
-
         HasDefendPriorityNextRound = false;
         HasTurnPriorityFromSkill   = false;
     }
 
-    public void GainedBoostPoint()
-    {
-        if (CurrentBp < 5) 
-        {
-            CurrentBp++;
-        }
-    }
     public void EndOfRoundCleanUp()
     {
-        IsDefendingThisRound = false;
-        HasTurnPriorityThisRound = false;
-        RevivedThisRound = false;
+        IsDefendingThisRound       = false;
+        HasTurnPriorityThisRound   = false;
+        RevivedThisRound           = false;
         HasDefendPriorityThisRound = false;
     }
-
 }

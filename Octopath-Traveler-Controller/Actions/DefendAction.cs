@@ -7,8 +7,7 @@ public class DefendAction : ICombatAction
 {
     public bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
-        actor.IsDefendingThisRound = true;
-        actor.HasDefendPriorityNextRound = true;
+        actor.Defend();
         return true;
     }
 }

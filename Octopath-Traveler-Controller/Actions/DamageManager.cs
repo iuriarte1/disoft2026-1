@@ -32,10 +32,11 @@ public class DamageManager
 
     private void ShowDamageMessage(int damage)
     {
+        var result = new BasicAttackResult(_actor.Name, _victim.Name, _weapon, damage);
         bool isWeakness = _victim.Weaknesses.Contains(_weapon);
         if (isWeakness)
-            _view.ShowBasicAttackWithWeaknessResultMessage(_actor.Name, _victim.Name, _weapon, damage, _victim.CurrentHp);
+            _view.ShowBasicAttackWithWeaknessResultMessage(result);
         else
-            _view.ShowBasicAttackResultMessage(_actor.Name, _victim.Name, _weapon, damage, _victim.CurrentHp);
+            _view.ShowBasicAttackResultMessage(result);
     }
 }

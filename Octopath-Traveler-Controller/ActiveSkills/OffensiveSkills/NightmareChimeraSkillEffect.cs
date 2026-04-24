@@ -10,16 +10,16 @@ public class NightmareChimeraSkillEffect : IActiveSkillEffect
     private Traveler _actor;
     private Skill _skill;
 
-    public NightmareChimeraSkillEffect(Skill skill, Beast vicitm, Traveler actor)
+    public NightmareChimeraSkillEffect(Skill skill, Beast victim, Traveler actor)
     {
-        _victim = vicitm;
+        _victim = victim;
         _actor = actor;
         _skill = skill;
     }
 
     public void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
-        string weapon = new WeaponOptionManager(view, actor, true).GetWeaponChoosen();
+        string weapon = new AllWeaponsOptionManager(view).GetWeaponChosen();
         if (weapon == null) return;
         Beast victim = new VictimOptionManager(view, enemyTeam.Where(e => !e.IsDead).ToList(), actor.Name).GetVictimChoosen();
         if (victim == null) return;

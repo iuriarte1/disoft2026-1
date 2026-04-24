@@ -33,9 +33,9 @@ public class Game
     }
     private string TestFilesManager()
     {
-        var archivos = new FolderHandler().GetFolderNames(_teamsFolder);
-        var input = _view.GetFileOptionForTeams(archivos);
-        var ruta = Path.Combine(_teamsFolder, archivos[input]);
-        return ruta;
+        var folderNames = new FolderHandler().GetFolderNames(_teamsFolder);
+        var fileOptionForTeams = _view.GetFileOptionForTeams(folderNames);
+        var path = Path.Combine(_teamsFolder, folderNames[fileOptionForTeams]);
+        return path;
     }
 }

@@ -27,8 +27,7 @@ public class BasicAttackAction : ICombatAction
     }
     private void GetWeaponToAttack(Traveler actor, View view)
     {
-        var weaponOptionManager = new WeaponOptionManager(view, actor);
-        _weaponChoosen = weaponOptionManager.GetWeaponChoosen();
+        _weaponChoosen = new WeaponOptionManager(view, actor).GetWeaponChosen();
     }
     private bool WeaponOptionsIsCancel()
     {

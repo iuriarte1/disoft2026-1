@@ -158,26 +158,18 @@ public class View
         ShowSkillsAvailableMessage(skills, travelerName);
         return int.Parse(_view.ReadLine());
     }
-    public void ShowBeastAtack(string BeastName, string victimName, int damage, string skillName, int victimHp, string skillType)
+    public void ShowBasicAttackResultMessage(BasicAttackResult result)
     {
         _view.WriteLine(_separator);
-        _view.WriteLine(BeastName + " usa " + skillName);
-        _view.WriteLine(victimName + " recibe " + damage + " de daño " + skillType);
-        ShowFinalHp(victimName, victimHp);
+        _view.WriteLine(result.AttackerName + " ataca");
+        _view.WriteLine(result.VictimName + " recibe " + result.Damage + " de daño de tipo " + result.WeaponType);
     }
-    public void ShowBasicAttackResultMessage(string name, string victimName, string weapon, int damage, int victimHp)
+    public void ShowBasicAttackWithWeaknessResultMessage(BasicAttackResult result)
     {
         _view.WriteLine(_separator);
-        _view.WriteLine(name + " ataca");
-        _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + weapon);
+        _view.WriteLine(result.AttackerName + " ataca");
+        _view.WriteLine(result.VictimName + " recibe " + result.Damage + " de daño de tipo " + result.WeaponType + " con debilidad");
     }
-    public void ShowBasicAttackWithWeaknessResultMessage(string name, string victimName, string weapon, int damage, int victimHp)
-    {
-        _view.WriteLine(_separator);
-        _view.WriteLine(name + " ataca");
-        _view.WriteLine(victimName + " recibe " + damage + " de daño de tipo " + weapon + " con debilidad");
-    }
-
     public void ShowFinalHp(string victimName, int victimHp)
     {
         _view.WriteLine(victimName + " termina con HP:" + victimHp);

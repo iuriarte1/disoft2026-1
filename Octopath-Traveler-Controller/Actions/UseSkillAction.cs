@@ -35,7 +35,7 @@ public class UseSkillAction : ICombatAction
             return false;
         }
         GetBoostPointsToUse();
-        ChangeSpTravelerFromSkillCost();
+        SpendSkillSp();
         ExecuteSkillEffect();
         return true;
     }
@@ -70,9 +70,9 @@ public class UseSkillAction : ICombatAction
         _skillChosen = _actor.ActiveSkills[_indexOfSkillChosen - 1];
     }
 
-    private void ChangeSpTravelerFromSkillCost()
+    private void SpendSkillSp()
     {
-        _actor.CurrentSp -= _skillChosen.SP;
+        _actor.SpendSp(_skillChosen.SP);
     }
     private bool SelectTarget()
     {

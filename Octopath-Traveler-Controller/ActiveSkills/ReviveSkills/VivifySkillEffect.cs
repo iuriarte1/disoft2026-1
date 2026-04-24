@@ -22,7 +22,7 @@ public class VivifySkillEffect : ReviveSkillEffect
         _travelerToRevive.RestoreHp(healing);
         view.ShowHealingResult(_travelerToRevive.Name, healing);
         view.ShowFinalHp(_travelerToRevive.Name, _travelerToRevive.CurrentHp);
-        _travelerToRevive.RevivedThisRound = true;
+        _travelerToRevive.MarkAsRevived();
     }
     private int CalculateHpToRestore(Traveler user)
     {
