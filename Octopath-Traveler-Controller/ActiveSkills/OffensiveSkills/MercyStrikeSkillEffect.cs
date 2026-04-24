@@ -13,8 +13,14 @@ public class MercyStrikeSkillEffect : SingleTargetOffensiveSkill
 
     protected override (int damage, bool enteredBreakingPoint) CalculateDamage(Traveler atacante, Beast victim)
     {
-        var (damage, enteredBreakingPoint) = base.CalculateDamage(atacante, victim);
-        int limitedDamage = Math.Min(damage,_victim.CurrentHp - 1);
-        return (Math.Max(limitedDamage, 0), enteredBreakingPoint);
+        double baseDamage = DamageCalculator.GetBaseDamage(atacante, victim, _skill.Type, _skill.Modifier);
+        double multiplier = DamageCalculator.GetDamageMultiplier(victim, _skill.Type);
+        int rawDamage = Convert.ToInt32(Math.Floor(baseDamage * multiplier));
+    
+        int limitedDamage = Math.Max(Math.Min(rawDamage, victim.CurrentHp - 1), 0);
+    
+        bool enteredBreakingPoint = ShieldManager.TryReduceShield(victim, _skill.Type, limitedDamage);
+    
+        return (limitedDamage, enteredBreakingPoint);
     }
 }

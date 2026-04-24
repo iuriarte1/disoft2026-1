@@ -39,11 +39,7 @@ public class CombatManager
     private void ExecuteRound()
     {
         foreach (var traveler in _playerTeam)
-        {
-            traveler.HasTurnPriorityThisRound = traveler.HasTurnPriorityFromSkill;
-            traveler.HasDefendPriorityThisRound = traveler.HasDefendPriorityNextRound;
-            traveler.HasDefendPriorityNextRound = false;
-        }
+            traveler.PrepareForNewRound();
         var turnManager = new TurnManager(_playerTeam, _enemyTeam);
         var alreadyActed = new HashSet<Unit>();
         
@@ -61,7 +57,6 @@ public class CombatManager
 
             ShowCurrentGameState(currentTurns, nextTurns, turnManager);
             ProcessUnitTurn(unit);
-            ClearPostTurnFlags(unit);
             alreadyActed.Add(unit);
             nextTurns = turnManager.GetNextRoundTurns();
         }
@@ -167,10 +162,5 @@ public class CombatManager
         {
             beast.TickBreakingPoint();
         }
-    }
-    private void ClearPostTurnFlags(Unit unit)
-    {
-        if (unit is Traveler t)
-            t.UsedDefender = false;
     }
 }

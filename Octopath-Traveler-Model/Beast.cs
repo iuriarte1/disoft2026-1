@@ -52,7 +52,10 @@ public class Beast : Unit
     public void ExitBreakingPoint()
     {
         IsInBreakingPoint = false;
-        Shields = MaxShields;
+        if (!IsDead)
+        {
+            Shields = MaxShields;
+        }
         JustRecoveredFromBreakingPoint = true; // ← marca la prioridad
     }
     public void TickBreakingPoint()
@@ -60,5 +63,22 @@ public class Beast : Unit
         RoundsInBreakingPoint--;
         if (RoundsInBreakingPoint == 0)
             ExitBreakingPoint();
+    }
+    public override TurnPriorityCategory GetCategoryForCurrentRound()
+    {
+        if (JustRecoveredFromBreakingPoint)
+            return TurnPriorityCategory.RecoveringFromBreakingPoint;
+        if (RoundsInLastTurn > 0)
+            return TurnPriorityCategory.DeprioritizedBySkill;
+        return base.GetCategoryForCurrentRound();
+    }
+    public override TurnPriorityCategory GetCategoryForNextRound()
+    {
+        // Regla 6 del enunciado: si sale de BP, manda sobre cualquier otra categoría
+        if (RoundsInBreakingPoint == 1)
+            return TurnPriorityCategory.RecoveringFromBreakingPoint;
+        if (RoundsInLastTurn > 1)
+            return TurnPriorityCategory.DeprioritizedBySkill;
+        return base.GetCategoryForNextRound();
     }
 }

@@ -15,7 +15,6 @@ public class Unit
     public bool HasDefendPriorityNextRound { get; set; } = false;
     public bool HasDefendPriorityThisRound { get; set; } = false;  // ← nueva
     public bool IsDefendingThisRound { get; set; } = false;
-    public bool UsedDefender { get; set; } = false;
     public bool HasTurnPriorityFromSkill { get; set; } = false;      // se setea al usar skill
     public bool HasTurnPriorityThisRound { get; set; } = false;      // activo durante la ronda
     public int RoundsInLastTurn { get; set; } = 0;
@@ -40,5 +39,17 @@ public class Unit
     {
         CurrentHp = 1;
     }
-    
+    public virtual TurnPriorityCategory GetCategoryForCurrentRound()
+    {
+        if (HasDefendPriorityThisRound) return TurnPriorityCategory.DefendedLastRound;
+        if (HasTurnPriorityThisRound)   return TurnPriorityCategory.PrioritizedBySkill;
+        return TurnPriorityCategory.Normal;
+    }
+
+    public virtual TurnPriorityCategory GetCategoryForNextRound()
+    {
+        if (HasDefendPriorityNextRound) return TurnPriorityCategory.DefendedLastRound;
+        if (HasTurnPriorityFromSkill)   return TurnPriorityCategory.PrioritizedBySkill;
+        return TurnPriorityCategory.Normal;
+    }
 }

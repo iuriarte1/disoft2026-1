@@ -16,7 +16,8 @@ public class ShootingStarsSkillEffect : IActiveSkillEffect
     {
         view.ShowSkillUsed(actor.Name, _skill.Name);
         var skills = CreateOneSkillForEachType();
-        foreach (Beast victim in enemyTeam)
+        var aliveVicitms = enemyTeam.Where(b => !b.IsDead).ToList();
+        foreach (Beast victim in aliveVicitms)
         {
             foreach (var skill in skills)
             {
@@ -24,7 +25,7 @@ public class ShootingStarsSkillEffect : IActiveSkillEffect
                 effect.Execute(actor, playerTeam, enemyTeam, view);
             }
         }
-        ShowOneTimeFinalHp(enemyTeam, view);
+        ShowOneTimeFinalHp(aliveVicitms, view);
     }
 
     private void ShowOneTimeFinalHp(List<Beast> enemyTeam, View view)

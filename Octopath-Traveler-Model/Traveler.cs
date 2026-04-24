@@ -24,6 +24,13 @@ public class Traveler : Unit
         CurrentSp = BaseStats.MaxSp;
         CurrentBp = 1;
     }
-    
+    public void PrepareForNewRound()
+    {
+        HasTurnPriorityThisRound   = HasTurnPriorityFromSkill;
+        HasDefendPriorityThisRound = HasDefendPriorityNextRound;
+
+        HasDefendPriorityNextRound = false;
+        HasTurnPriorityFromSkill   = false;  // ← BUG FIX: ahora sí se limpia
+    }
 
 }

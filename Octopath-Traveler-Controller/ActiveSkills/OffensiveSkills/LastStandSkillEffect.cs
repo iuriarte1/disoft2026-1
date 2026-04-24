@@ -13,10 +13,17 @@ public class LastStandSkillEffect : AllEnemiesOffensiveSkill
 
     protected override (int damage, bool enteredBreakingPoint) CalculateDamage(Traveler atacante, Beast victim)
     {
-        var (rawDamage, enteredBreakingPoint) = ActiveSkillDamageCalculator.CalculateRawDamageAndShieldReduction(atacante, victim, _skill);
-        int missingHpPercent = (int)Math.Floor((double)(atacante.BaseStats.MaxHp - atacante.CurrentHp) / atacante.BaseStats.MaxHp * 100);
-        double bonus = 1 + (missingHpPercent * 3.0 / 100);
-        int finalDamage = Convert.ToInt32(Math.Floor(rawDamage * bonus));
+        double missingHpPercent = Math.Floor(
+            (double)(atacante.BaseStats.MaxHp - atacante.CurrentHp) / atacante.BaseStats.MaxHp * 100);
+        double lastStandBonus = 1 + (missingHpPercent * 3.0 / 100);
+
+        double baseDamage = DamageCalculator.GetBaseDamage(atacante, victim, _skill.Type, _skill.Modifier);
+        double damageWithBonus = baseDamage * lastStandBonus;
+
+        double multiplier = DamageCalculator.GetDamageMultiplier(victim, _skill.Type);
+        bool enteredBreakingPoint = ShieldManager.TryReduceShield(victim, _skill.Type, damageWithBonus);
+        int finalDamage = Convert.ToInt32(Math.Floor(damageWithBonus * multiplier));
+
         return (Math.Max(finalDamage, 0), enteredBreakingPoint);
     }
 }
