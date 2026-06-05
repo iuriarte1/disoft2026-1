@@ -9,4 +9,5 @@ public class Skill
     public string Target { get; set; }
     public string Description { get; set; }
     public string Boost { get; set; }
+    public int Hits { get; set; } = 1;
 }

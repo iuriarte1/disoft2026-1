@@ -17,6 +17,9 @@ public class Unit
     public bool HasTurnPriorityFromSkill { get; set; } = false;
     public bool HasTurnPriorityThisRound { get; set; } = false;
     public int RoundsInLastTurn { get; set; } = 0;
+    private readonly List<StatEffect> _statusEffects = new();
+
+    public IReadOnlyList<StatEffect> StatusEffects => _statusEffects;
     
     public void TakeDamage(int damageAmount)
     {
@@ -102,5 +105,21 @@ public class Unit
         if (HasDefendPriorityNextRound) return TurnPriorityCategory.DefendedLastRound;
         if (HasTurnPriorityFromSkill) return TurnPriorityCategory.PrioritizedBySkill;
         return TurnPriorityCategory.Normal;
+    }
+    // cambios E3
+    public void ApplyStatusEffect(StatModifierType type, int rounds)
+    {
+        var existing = _statusEffects.FirstOrDefault(e => e.Type == type);
+        if (existing != null) existing.ExtendDuration(rounds);
+        else _statusEffects.Add(new StatEffect(type, rounds));
+    }
+
+    public bool HasStatusEffect(StatModifierType type)
+        => _statusEffects.Any(e => e.Type == type);
+
+    public void TickStatusEffects()
+    {
+        foreach (var effect in _statusEffects) effect.Tick();
+        _statusEffects.RemoveAll(e => e.HasExpired);
     }
 }
