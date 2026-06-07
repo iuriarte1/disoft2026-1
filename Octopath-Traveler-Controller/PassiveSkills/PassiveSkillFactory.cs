@@ -10,6 +10,16 @@ public static class PassiveSkillFactory
         "Fleefoot" =>  new Fleefoot(),
         "Elemental Augmentation" => new ElementalAugmentation(),
         "Inner Strength" => new InnerStrength(),
-        "Summon Strength" => new SummonStrength()
+        "Summon Strength" => new SummonStrength(),
+        "Vim and Vigor" => new VimAndVigor(),
+        "Second Wind" => new SecondWind(),
+        "Boost Start" => new BoostStart(),
+        "Stat Swap" => new StatSwap(),
+        "Hang Tough" => new HangTough(),
+        "SP Saver" => new SpSaver(),
+        "Heightened Healing" => new HeightenedHealing(),
+        "Encore" => new Encore(),
+        "Inspiration" => new Inspiration(),
+        _                        => new PassiveSkillEffect()
     };
 }

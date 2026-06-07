@@ -30,9 +30,13 @@ public class BeastAllEnemiesSkill : IBeastSkillEffect
     {
         if (victim.IsDefendingThisRound)
             view.ShowTravelerDefending(victim.Name);
-        int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);
-        victim.TakeDamage(damage);
-        view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());
+        for (int i = 0; i < _skill.Hits; i++)
+        {
+            int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);
+            victim.TakeDamage(damage);
+            view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());
+        }
+        
     }
 
     private string GetAttackTypeName()

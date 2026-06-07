@@ -9,15 +9,18 @@ public class EnemyTurn
     private readonly Beast _actor;
     private readonly View _view;
     private readonly List<Traveler> _playerTeam;
-    public EnemyTurn(Beast actor,List<Traveler> team, View view)
+    private readonly List<Beast> _enemyTeam;
+
+    public EnemyTurn(Beast actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
         _actor = actor;
         _view = view;
-        _playerTeam = team;
+        _playerTeam = playerTeam;
+        _enemyTeam = enemyTeam;
     }
     public void Execute()
     {
-        new BeastSkillFactory().Create(_actor.Skill).Execute(_actor, _playerTeam, _view);
+        new BeastSkillFactory(_enemyTeam).Create(_actor.Skill).Execute(_actor, _playerTeam, _view);
     }
    
 }

@@ -260,6 +260,36 @@ public class View
     {
         _view.WriteLine(unitName + " tendrá " + effectLabel + " durante " + rounds + " rondas");
     }
+    public void ShowSpRecoveryResult(string targetName, int spAmount)
+    {
+        _view.WriteLine(targetName + " recupera " + spAmount + " SP");
+    }
+    public void ShowAttackerAnnouncement(string attackerName)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine(attackerName + " ataca");
+    }
+
+    public void ShowBasicAttackHitMessage(BasicAttackResult result)
+    {
+        _view.WriteLine(result.VictimName + " recibe " + result.Damage + " de daño de tipo " + result.WeaponType);
+    }
+
+    public void ShowBasicAttackHitWithWeaknessMessage(BasicAttackResult result)
+    {
+        _view.WriteLine(result.VictimName + " recibe " + result.Damage + " de daño de tipo " + result.WeaponType + " con debilidad");
+    }
+
+    public void ShowInsuficientBp(string name, int amount)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine(name + " no tiene "+ amount + " BP para utilizar");
+    }
+    public void ShowExtraTurn(string travelerName)
+    {
+        _view.WriteLine(_separator);
+        _view.WriteLine(travelerName + " obtiene un turno adicional");
+    }
     public string[] GetScript()
         => _view.GetScript();
 }

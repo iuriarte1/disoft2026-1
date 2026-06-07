@@ -50,19 +50,16 @@ public class BasicAttackAction : ICombatAction
         }
         return false;
     }
+    
     private void GetBpToUse(View view, Traveler actor)
     {
-        if (actor.CurrentBp == 0)
-        {
-            _boostPointsToUse = 0;
-            return;
-        }
-        _boostPointsToUse = view.GetHowManyBoostPointsToUse();
+        _boostPointsToUse = new BpInputHandler(view).GetValidBoostPoints(actor);
         actor.SpendBp(_boostPointsToUse);
     }
     private void DamageCalculatorFromWeapon(Traveler actor, View view)
     {
-        var damageManager = new DamageManager(actor, _victimChoosen, _weaponChoosen, view);
+        int hits = 1 + _boostPointsToUse;
+        var damageManager = new DamageManager(actor, _victimChoosen, _weaponChoosen, view, hits);
         damageManager.Execute();
     }
 }

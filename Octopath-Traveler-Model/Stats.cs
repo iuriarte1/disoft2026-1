@@ -18,4 +18,8 @@ public class Stats
     [JsonPropertyName("Speed")]
     public int Speed { get; set; }
     public int Evasion { get; set; }
+    public void SwapPhysAndElemAtk()
+    {
+        (PhysicalAttack, ElementalAttack) = (ElementalAttack, PhysicalAttack);
+    }
 }

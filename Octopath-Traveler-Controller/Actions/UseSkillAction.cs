@@ -17,6 +17,7 @@ public class UseSkillAction : ICombatAction
     private Traveler _allyChosen;
     private int _bPToUse;
     private int _teamBpBeforeSpend;
+    private const int MaxBoostPointsPerAction = 3;
     
     public bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
@@ -62,7 +63,7 @@ public class UseSkillAction : ICombatAction
             _bPToUse = 3;
             return;
         }
-        _bPToUse = _view.GetHowManyBoostPointsToUse();
+        _bPToUse = new BpInputHandler(_view).GetValidBoostPoints(_actor);
     }
     private void GetIndexSkillChosen()
     {
@@ -93,6 +94,7 @@ public class UseSkillAction : ICombatAction
         {
             case "Single":
                 if (SkillSelectsWeaponFirst()) return true;
+                if (SkillSelectsTargetAutomatically()) return true;
                 _victimChosen = new VictimOptionManager(_view, _enemyTeam, _actor.Name).GetVictimChoosen();
                 return _victimChosen != null;
             case "Ally":
@@ -114,6 +116,7 @@ public class UseSkillAction : ICombatAction
     }
     private bool SkillSelectsWeaponFirst()
         => _skillChosen.Name == "Nightmare Chimera";
-    
+    private bool SkillSelectsTargetAutomatically()
+        => _skillChosen.Name is "Thousand Spears" or "Rain of Arrows" or "Guardian Liondog";
     
 }

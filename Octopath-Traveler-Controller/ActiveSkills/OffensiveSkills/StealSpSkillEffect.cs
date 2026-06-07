@@ -28,7 +28,9 @@ public class StealSpSkillEffect : OffensiveSkillEffect
             if (enteredBreakingPoint)
                 view.ShowBreakingPoint(_victim.Name);
         }
-        attacker.RestoreSp((int)(totalDamage * 0.05));
+        int spRestored = (int)(totalDamage * 0.05);
+        attacker.RestoreSp(spRestored);
+        view.ShowSpRecoveryResult(attacker.Name, spRestored);
         view.ShowFinalHp(_victim.Name, _victim.CurrentHp);
     }
 

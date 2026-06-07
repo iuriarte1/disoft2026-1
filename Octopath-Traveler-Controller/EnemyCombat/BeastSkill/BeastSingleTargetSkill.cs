@@ -24,9 +24,12 @@ public class BeastSingleTargetSkill : IBeastSkillEffect
         view.ShowSkillUsed(actor.Name, _skill.Name);
         if (victim.IsDefendingThisRound)
             view.ShowTravelerDefending(victim.Name);
-        int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);
-        victim.TakeDamage(damage);
-        view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());
+        for (int i = 0; i < _skill.Hits; i++)
+        {
+            int damage = BeastDamageCalculator.Calculate(actor, victim, _skill, _skillType);
+            victim.TakeDamageFromUnit(damage, actor);
+            view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());
+        }
         view.ShowFinalHp(victim.Name, victim.CurrentHp);
     }
 

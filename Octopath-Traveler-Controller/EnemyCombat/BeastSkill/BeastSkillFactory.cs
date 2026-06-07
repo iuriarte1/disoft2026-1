@@ -5,6 +5,12 @@ namespace Octopath_Traveler.EnemyCombat.BeastSkill;
 
 public class BeastSkillFactory
 {
+    private readonly List<Beast> _enemyTeam;
+
+    public BeastSkillFactory(List<Beast> enemyTeam)
+    {
+        _enemyTeam = enemyTeam;
+    }
     public IBeastSkillEffect Create(Skill skill)
     {
 
@@ -32,7 +38,17 @@ public class BeastSkillFactory
             "Incinerate"      => new BeastAllEnemiesSkill(skill,"Elem"),
             "Black Gale"      => new BeastAllEnemiesSkill(skill,"Elem"),
             "Galestorm"       => new BeastAllEnemiesSkill(skill,"Elem"),
-            "Vortal Claw"     => new VortalClawSkillEffect(skill)
+            "Vortal Claw"     => new VortalClawSkillEffect(skill),
+            // E3
+            "Double Bite" => new BeastSingleTargetSkill(Skill.WithHits(skill,2), "Phys", new TravelerWithLowestPhysDef()),
+            "Shadow Magic" => new BeastAllEnemiesSkill(Skill.WithHits(skill, 2), "Elem"),
+            "Triple Slash" => new BeastSingleTargetSkill(Skill.WithHits(skill, 3), "Phys", new TravelerWithHighestHp()), 
+            "Consume Armor" => new ConsumeArmourSkillEffect(skill),
+            "Flap" => new FlapSkillEffect(skill),
+            "Acid Spray" => new AcidSpraySkillEffect(skill),
+            "Gather Strength" => new GatherStrengthSkillEffect(skill),
+            "Augmented Magic" => new AugmentedMagicSkillEffect(skill, _enemyTeam),
+            "Volcano" => new VolcanoSkillEffect(skill)
         };
     }
 }

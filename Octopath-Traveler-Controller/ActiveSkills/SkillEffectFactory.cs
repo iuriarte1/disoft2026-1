@@ -21,11 +21,21 @@ public class SkillEffectFactory
             "Mercy Strike" => new MercyStrikeSkillEffect(skill, victim),
             "Shooting Stars" => new ShootingStarsSkillEffect(skill),
             "Nightmare Chimera" => new NightmareChimeraSkillEffect(skill, victim, actor),
-            "Thousand Spears"  => new AutoSelectSingleTargetSkill(skill, living => living.MinBy(b => b.BaseStats.PhysicalDefense)),
-            "Rain of Arrows"   => new AutoSelectSingleTargetSkill(skill, living => living.MinBy(b => b.CurrentHp)),
-            "Guardian Liondog" => new AutoSelectSingleTargetSkill(skill, living => living.MaxBy(b => b.BaseStats.Speed)),
-            "HP Thief" => new HpThiefSkillEffect(skill, victim),
-            "Steal SP"  => new StealSpSkillEffect(skill, victim),
+            "Fire Storm" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 2)),
+            "Blizzard" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 2)),
+            "Lightning Blast" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 2)),
+            "Ignis Ardere" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 3)),
+            "Glacies Claudere" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 3)),
+            "Tonitrus Canere" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 3)),
+            "Ventus Saltare" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 3)),
+            "Lux Congerere" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 3)),
+            "Tenebrae Operire" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 3)),
+            "Arrowstorm" => new AllEnemiesOffensiveSkill(Skill.WithHits(skill, 6)),
+            "Thousand Spears" => new AutoSelectSingleTargetSkill(Skill.WithHits(skill, 7), living => living.MinBy(b => b.BaseStats.PhysicalDefense)),
+            "Rain of Arrows" => new AutoSelectSingleTargetSkill(Skill.WithHits(skill, 6), living => living.MinBy(b => b.CurrentHp)),
+            "Guardian Liondog" => new AutoSelectSingleTargetSkill(Skill.WithHits(skill, 5), living => living.MaxBy(b => b.BaseStats.Speed)),
+            "HP Thief" => new HpThiefSkillEffect(Skill.WithHits(skill, 2), victim),
+            "Steal SP"  => new StealSpSkillEffect(Skill.WithHits(skill, 2), victim),
 
             // Buff y debuff
             "Lion Dance"      => new AllyBuffSkillEffect(skill, ally,new[] { StatModifierType.IncreasedPhysicalAttack }, 2),
@@ -48,4 +58,5 @@ public class SkillEffectFactory
             _ when skill.Target == "Enemies"  => new AllEnemiesOffensiveSkill(skill)
         };
     }
+    
 }

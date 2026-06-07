@@ -162,4 +162,20 @@ public class Unit
     {
         CurrentSp = Math.Min(CurrentSp + amount, BaseStats.MaxSp);
     }
+    public void ReviveWithHp(int hp)
+    {
+        CurrentHp = Math.Min(hp, BaseStats.MaxHp);
+    }
+    public void TakeDamageFromUnit(int damageAmount, Unit attacker)
+    {
+        if (HasDivineAura() && CurrentHp % 2 == 0 && attacker.CurrentHp % 2 == 0)
+            return; 
+        TakeDamage(damageAmount);
+    }
+
+    private bool HasDivineAura()
+    {
+        if (this is not Traveler traveler) return false;
+        return traveler.PasiveSkills.Any(s => s.Name == "Divine Aura");
+    }
 }

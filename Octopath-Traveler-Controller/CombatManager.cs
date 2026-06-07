@@ -91,7 +91,7 @@ public class CombatManager
     }
     private void HandleEnemyTurn(Beast beast)
     {
-        var beastAction = new EnemyTurn(beast, _playerTeam, _view);
+        var beastAction = new EnemyTurn(beast, _playerTeam, _enemyTeam, _view);
         beastAction.Execute();
     }
     
@@ -109,8 +109,9 @@ public class CombatManager
     }
     private void EndOfRoundCleanup()
     {
+        var passiveManager = new PassiveSkillManager(_playerTeam);
+        passiveManager.ApplyEndOfRoundEffects();
         var clean = new EndOfRoundCleaner(_playerTeam, _enemyTeam);
         clean.Clean();
     }
-
 }

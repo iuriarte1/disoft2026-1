@@ -17,4 +17,11 @@ public class PassiveSkillManager
         foreach (var skill in traveler.PasiveSkills)
             PassiveSkillFactory.Create(skill).OnBattleStart(traveler);
     }
+    public void ApplyEndOfRoundEffects()
+    {
+        foreach (var traveler in _playerTeam.Where(t => !t.IsDead))
+        foreach (var skill in traveler.PasiveSkills)
+            PassiveSkillFactory.Create(skill).OnEndOfRound(traveler);
+    }
+
 }

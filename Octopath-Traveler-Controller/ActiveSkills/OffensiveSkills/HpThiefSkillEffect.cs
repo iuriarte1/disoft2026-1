@@ -28,8 +28,11 @@ public class HpThiefSkillEffect : OffensiveSkillEffect
             if (enteredBreakingPoint)
                 view.ShowBreakingPoint(_victim.Name);
         }
-        attacker.RestoreHp(totalDamage / 2);
+        int healing = totalDamage / 2;
+        attacker.RestoreHp(healing);
+        view.ShowHealingResult(attacker.Name, healing);
         view.ShowFinalHp(_victim.Name, _victim.CurrentHp);
+        view.ShowFinalHp(attacker.Name, attacker.CurrentHp);
     }
 
     private void ShowDamageMessage(Beast victim, int damage, View view)
