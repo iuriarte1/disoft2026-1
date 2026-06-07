@@ -30,6 +30,7 @@ public class EndOfRoundCleaner
         ResetBreakingPointRecoveryFlags();
         TickTurnDelays();
         TickBreakingPointCounters();
+        TickEnemyStatEffects();
     }
 
     private void ResetBreakingPointRecoveryFlags()
@@ -48,5 +49,10 @@ public class EndOfRoundCleaner
     {
         foreach (var beast in _enemyTeam.Where(b => b.IsInBreakingPoint))
             beast.TickBreakingPoint();
+    }
+    private void TickEnemyStatEffects()
+    {
+        foreach (var beast in _enemyTeam)
+            beast.TickStatEffects();
     }
 }

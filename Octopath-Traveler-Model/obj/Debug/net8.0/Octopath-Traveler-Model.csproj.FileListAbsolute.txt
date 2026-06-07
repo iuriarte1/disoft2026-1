@@ -10,3 +10,5 @@ C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-M
 C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\refint\Octopath-Traveler-Model.dll
 C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.pdb
 C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\ref\Octopath-Traveler-Model.dll
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Octopath-Traveler-Model.csproj.AssemblyReference.cache
+C:\Users\uriar\Downloads\Octopath-Traveler\Octopath-Traveler\Octopath-Traveler-Model\obj\Debug\net8.0\Avalonia\Resources.Inputs.cache

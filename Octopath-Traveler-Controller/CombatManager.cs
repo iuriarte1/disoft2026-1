@@ -28,6 +28,7 @@ public class CombatManager
         {
             _view.ShowRoundMessage(_roundCount);
             ExecuteRound();
+            EndOfRoundCleanup();
             GainedBoostPoints();
             _roundCount++;
         }
@@ -42,10 +43,11 @@ public class CombatManager
     {
         foreach (var traveler in _playerTeam)
             traveler.PrepareForNewRound();
+
         var turnManager = new TurnManager(_playerTeam, _enemyTeam);
         var alreadyActed = new HashSet<Unit>();
-        
         List<Unit> nextTurns = turnManager.GetNextRoundTurns();
+
         while (true)
         {
             List<Unit> currentTurns = turnManager.GetCurrentRoundTurns()
@@ -62,8 +64,6 @@ public class CombatManager
             alreadyActed.Add(unit);
             nextTurns = turnManager.GetNextRoundTurns();
         }
-
-        EndOfRoundCleanup();
     }
     private void ShowCurrentGameState(List<Unit> remainingTurns, List<Unit> nextTurns, TurnManager turnManager)
     {
@@ -104,10 +104,8 @@ public class CombatManager
     }
     private void GainedBoostPoints()
     {
-        foreach (var traveler in _playerTeam.Where(t => !t.IsDead))
-        {
+        foreach (var traveler in _playerTeam.Where(t => !t.IsDead && !t.UsedBoostThisRound))
             traveler.GainBp();
-        }
     }
     private void EndOfRoundCleanup()
     {

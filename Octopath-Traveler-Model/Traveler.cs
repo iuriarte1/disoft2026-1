@@ -42,5 +42,7 @@ public class Traveler : Unit
         HasTurnPriorityThisRound = false;
         RevivedThisRound = false;
         HasDefendPriorityThisRound = false;
+        TickStatEffects();
+        ResetBoostUsage(); 
     }
 }

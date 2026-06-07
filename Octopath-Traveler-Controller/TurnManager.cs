@@ -20,7 +20,7 @@ public class TurnManager
         return _allCombatants
             .Where(CanActThisRound)
             .OrderBy(u => u.GetCategoryForCurrentRound())
-            .ThenByDescending(u => u.BaseStats.Speed)
+            .ThenByDescending(u => u.EffectiveSpeed)
             .ThenBy(IsPlayer)
             .ThenBy(BoardIndex)
             .ToList();
@@ -31,7 +31,7 @@ public class TurnManager
         return _allCombatants
             .Where(WillActNextRound)
             .OrderBy(u => u.GetCategoryForNextRound())
-            .ThenByDescending(u => u.BaseStats.Speed)
+            .ThenByDescending(u => u.EffectiveSpeedAfterTick)
             .ThenBy(IsPlayer)
             .ThenBy(BoardIndex)
             .ToList();
@@ -61,4 +61,5 @@ public class TurnManager
         if (unit is Beast b) return _enemies.IndexOf(b);
         return int.MaxValue;
     }
+    
 }

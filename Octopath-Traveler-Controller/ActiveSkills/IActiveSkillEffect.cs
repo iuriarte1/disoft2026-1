@@ -6,5 +6,5 @@ public interface IActiveSkillEffect
 {
     void Execute(Traveler actor, List<Traveler> playerTeam, 
         List<Beast> enemyTeam, View view);
-
+    
 }

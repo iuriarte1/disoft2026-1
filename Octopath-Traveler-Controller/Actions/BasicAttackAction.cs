@@ -21,7 +21,7 @@ public class BasicAttackAction : ICombatAction
         {
             return false; 
         }
-        GetBpToUse(view);
+        GetBpToUse(view, actor);
         DamageCalculatorFromWeapon(actor, view);
         return true;
     }
@@ -50,9 +50,10 @@ public class BasicAttackAction : ICombatAction
         }
         return false;
     }
-    private void GetBpToUse(View view)
+    private void GetBpToUse(View view, Traveler actor)
     {
         _boostPointsToUse = view.GetHowManyBoostPointsToUse();
+        actor.SpendBp(_boostPointsToUse);
     }
     private void DamageCalculatorFromWeapon(Traveler actor, View view)
     {

@@ -256,6 +256,10 @@ public class View
         ShowAllysAvailableMessage(allyNames, travelerName);
         return GetAllyOption();
     }
+    public void ShowStatEffectApplied(string unitName, string effectLabel, int rounds)
+    {
+        _view.WriteLine(unitName + " tendrá " + effectLabel + " durante " + rounds + " rondas");
+    }
     public string[] GetScript()
         => _view.GetScript();
 }

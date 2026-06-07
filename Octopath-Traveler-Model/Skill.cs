@@ -10,4 +10,5 @@ public class Skill
     public string Description { get; set; }
     public string Boost { get; set; }
     public int Hits { get; set; } = 1;
+    public bool IsDivine => Boost != null && Boost.StartsWith("[Divine Skill]");
 }

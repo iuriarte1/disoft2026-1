@@ -1,4 +1,5 @@
 using Octopath_Traveler_Model;
+using Octopath_Traveler.Combat;
 
 namespace Octopath_Traveler;
 
@@ -12,9 +13,14 @@ public static class DamageCalculator
 
     public static double GetBaseDamage(Traveler actor, Beast victim, string attackType, double modifier)
     {
-        return IsPhysical(attackType)
-            ? actor.BaseStats.PhysicalAttack * modifier - victim.BaseStats.PhysicalDefense
-            : actor.BaseStats.ElementalAttack * modifier - victim.BaseStats.ElementalDefense;
+        bool isPhysical = IsPhysical(attackType);
+        double attack = isPhysical ? actor.BaseStats.PhysicalAttack : actor.BaseStats.ElementalAttack;
+        double defense = isPhysical ? victim.BaseStats.PhysicalDefense : victim.BaseStats.ElementalDefense;
+
+        double rawDamage = attack * modifier - defense;
+        rawDamage *= StatEffectMultipliers.AttackMultiplier(actor, isPhysical);
+        rawDamage *= StatEffectMultipliers.DefenseMultiplier(victim, isPhysical);
+        return rawDamage;
     }
 
     public static double GetDamageMultiplier(Beast victim, string attackType)

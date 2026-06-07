@@ -41,15 +41,25 @@ public class UseSkillAction : ICombatAction
     }
     private void SaveSkillsNames()
     {
-        foreach (var skill in _actor.ActiveSkills.Where(s=> s.SP <= _actor.CurrentSp))
-        {
+        foreach (var skill in _actor.ActiveSkills.Where(s => IsSkillAvailable(s)))
             _skillsNames.Add(skill.Name);
-        }
+    }
+
+    private bool IsSkillAvailable(Skill skill)
+    {
+        if (skill.SP > _actor.CurrentSp) return false;
+        if (skill.IsDivine && _actor.CurrentBp < 3) return false;
+        return true;
     }
 
     private void GetBoostPointsToUse()
     {
         if (SkillSelectsWeaponFirst()) return;
+        if (_skillChosen.IsDivine)
+        {
+            _bPToUse = 3;
+            return;
+        }
         _bPToUse = _view.GetHowManyBoostPointsToUse();
     }
     private void GetIndexSkillChosen()
@@ -73,6 +83,7 @@ public class UseSkillAction : ICombatAction
     private void SpendSkillSp()
     {
         _actor.SpendSp(_skillChosen.SP);
+        _actor.SpendBp(_bPToUse);
     }
     private bool SelectTarget()
     {
@@ -95,7 +106,8 @@ public class UseSkillAction : ICombatAction
     }
     private void ExecuteSkillEffect()
     {
-        IActiveSkillEffect effect = SkillEffectFactory.Create(_skillChosen, _actor, _victimChosen, _allyChosen);
+        IActiveSkillEffect effect = SkillEffectFactory.Create(
+            _skillChosen, _actor, _victimChosen, _allyChosen, _playerTeam);
         effect.Execute(_actor, _playerTeam, _enemyTeam, _view);
     }
     private bool SkillSelectsWeaponFirst()

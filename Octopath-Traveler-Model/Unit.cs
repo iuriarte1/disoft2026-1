@@ -18,9 +18,19 @@ public class Unit
     public bool HasTurnPriorityThisRound { get; set; } = false;
     public int RoundsInLastTurn { get; set; } = 0;
     private readonly List<StatEffect> _statusEffects = new();
-
     public IReadOnlyList<StatEffect> StatusEffects => _statusEffects;
+    private const double SpeedIncreasedFactor = 1.5;
+    private const double SpeedDecreasedFactor = 2.0 / 3.0;
     
+    public bool UsedBoostThisRound { get; private set; } = false;
+
+    public void SpendBp(int amount)
+    {
+        CurrentBp -= amount;
+        if (amount > 0) UsedBoostThisRound = true;
+    }
+
+    public void ResetBoostUsage() => UsedBoostThisRound = false;
     public void TakeDamage(int damageAmount)
     {
         CurrentHp -= damageAmount;
@@ -107,19 +117,45 @@ public class Unit
         return TurnPriorityCategory.Normal;
     }
     // cambios E3
-    public void ApplyStatusEffect(StatModifierType type, int rounds)
+    public void ApplyStatEffect(StatModifierType type, int rounds)
     {
         var existing = _statusEffects.FirstOrDefault(e => e.Type == type);
         if (existing != null) existing.ExtendDuration(rounds);
         else _statusEffects.Add(new StatEffect(type, rounds));
     }
 
-    public bool HasStatusEffect(StatModifierType type)
+    public bool HasStatEffect(StatModifierType type)
         => _statusEffects.Any(e => e.Type == type);
 
-    public void TickStatusEffects()
+    public void TickStatEffects()
     {
         foreach (var effect in _statusEffects) effect.Tick();
         _statusEffects.RemoveAll(e => e.HasExpired);
+    }
+    public double EffectiveSpeed
+    {
+        get
+        {
+            double speed = BaseStats.Speed;
+            if (HasStatEffect(StatModifierType.IncreasedSpeed))
+                speed *= SpeedIncreasedFactor;
+            if (HasStatEffect(StatModifierType.DecreasedSpeed))
+                speed *= SpeedDecreasedFactor;
+            return speed;
+        }
+    }
+    public double EffectiveSpeedAfterTick
+    {
+        get
+        {
+            double speed = BaseStats.Speed;
+            bool hasIncreasedAfterTick = _statusEffects
+                .Any(e => e.Type == StatModifierType.IncreasedSpeed && e.RemainingRounds > 1);
+            bool hasDecreasedAfterTick = _statusEffects
+                .Any(e => e.Type == StatModifierType.DecreasedSpeed && e.RemainingRounds > 1);
+            if (hasIncreasedAfterTick) speed *= SpeedIncreasedFactor;
+            if (hasDecreasedAfterTick) speed *= SpeedDecreasedFactor;
+            return speed;
+        }
     }
 }
