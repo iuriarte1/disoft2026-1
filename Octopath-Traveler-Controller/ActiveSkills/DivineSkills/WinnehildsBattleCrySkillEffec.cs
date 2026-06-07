@@ -6,8 +6,9 @@ namespace Octopath_Traveler.ActiveSkills.DivineSkills;
 public class WinnehildsBattleCrySkillEffect : IActiveSkillEffect
 {
     private static readonly string[] WeaponTypes = 
-        { "Sword", "Bow", "Dagger", "Axe", "Stave", "Spear" };
+        { "Sword", "Spear", "Dagger", "Axe", "Bow", "Stave" };
     private readonly Skill _skill;
+    private List<Beast> _enemyTeam;
 
     public WinnehildsBattleCrySkillEffect(Skill skill)
     {
@@ -16,21 +17,22 @@ public class WinnehildsBattleCrySkillEffect : IActiveSkillEffect
 
     public void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
+        _enemyTeam = enemyTeam.Where(b => !b.IsDead).ToList();
         view.ShowSkillUsed(actor.Name, _skill.Name);
-        foreach (var weaponType in WeaponTypes)
-            ApplyHitToAllEnemies(actor, enemyTeam, weaponType, view);
-        ShowFinalHpOfAll(enemyTeam, view);
+        foreach (var enemy in _enemyTeam)
+            ApplyAllWeaponsToEnemy(actor, enemy, view);
+        ShowFinalHpOfAll(_enemyTeam, view);
     }
 
-    private void ApplyHitToAllEnemies(Traveler actor, List<Beast> enemies, string weaponType, View view)
+    private void ApplyAllWeaponsToEnemy(Traveler actor, Beast enemy, View view)
     {
-        var fakeSkill = new Skill 
-        { 
-            Name = _skill.Name, Type = weaponType, 
-            Modifier = _skill.Modifier, Target = "Enemies" 
-        };
-        foreach (var enemy in enemies.Where(e => !e.IsDead))
+        foreach (var weaponType in WeaponTypes)
         {
+            var fakeSkill = new Skill 
+            { 
+                Name = _skill.Name, Type = weaponType, 
+                Modifier = _skill.Modifier, Target = "Enemies" 
+            };
             var (damage, enteredBreakingPoint) = ActiveSkillDamageCalculator.Calculate(actor, enemy, fakeSkill);
             enemy.TakeDamage(damage);
             ShowHitMessage(enemy, weaponType, damage, view);

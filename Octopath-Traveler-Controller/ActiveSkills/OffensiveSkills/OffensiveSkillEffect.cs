@@ -24,13 +24,16 @@ public abstract class OffensiveSkillEffect : IActiveSkillEffect
 
     private void ApplyDamageToVictims(Traveler attacker, List<Beast> victims, View view)
     {
-        foreach (var victim in victims)
+        for (int i = 0; i < _skill.Hits; i++)
         {
-            var (damage, enteredBreakingPoint) = CalculateDamage(attacker, victim);
-            victim.TakeDamage(damage);
-            ShowDamageMessage(victim, damage, view);
-            if (enteredBreakingPoint)
-                view.ShowBreakingPoint(victim.Name);
+            foreach (var victim in victims.Where(v => !v.IsDead))
+            {
+                var (damage, enteredBreakingPoint) = CalculateDamage(attacker, victim);
+                victim.TakeDamage(damage);
+                ShowDamageMessage(victim, damage, view);
+                if (enteredBreakingPoint)
+                    view.ShowBreakingPoint(victim.Name);
+            }
         }
     }
 

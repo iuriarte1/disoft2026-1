@@ -16,6 +16,7 @@ public class UseSkillAction : ICombatAction
     private Beast _victimChosen;
     private Traveler _allyChosen;
     private int _bPToUse;
+    private int _teamBpBeforeSpend;
     
     public bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
@@ -35,6 +36,7 @@ public class UseSkillAction : ICombatAction
             return false;
         }
         GetBoostPointsToUse();
+        _teamBpBeforeSpend = playerTeam.Sum(t => t.CurrentBp);
         SpendSkillSp();
         ExecuteSkillEffect();
         return true;
@@ -107,7 +109,7 @@ public class UseSkillAction : ICombatAction
     private void ExecuteSkillEffect()
     {
         IActiveSkillEffect effect = SkillEffectFactory.Create(
-            _skillChosen, _actor, _victimChosen, _allyChosen, _playerTeam);
+            _skillChosen, _actor, _victimChosen, _allyChosen, _playerTeam, _teamBpBeforeSpend);
         effect.Execute(_actor, _playerTeam, _enemyTeam, _view);
     }
     private bool SkillSelectsWeaponFirst()

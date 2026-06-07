@@ -28,8 +28,8 @@ public class CombatManager
         {
             _view.ShowRoundMessage(_roundCount);
             ExecuteRound();
-            EndOfRoundCleanup();
             GainedBoostPoints();
+            EndOfRoundCleanup();
             _roundCount++;
         }
         ShowFinalResult();

@@ -52,6 +52,11 @@ public class BasicAttackAction : ICombatAction
     }
     private void GetBpToUse(View view, Traveler actor)
     {
+        if (actor.CurrentBp == 0)
+        {
+            _boostPointsToUse = 0;
+            return;
+        }
         _boostPointsToUse = view.GetHowManyBoostPointsToUse();
         actor.SpendBp(_boostPointsToUse);
     }

@@ -158,4 +158,8 @@ public class Unit
             return speed;
         }
     }
+    public void RestoreSp(int amount)
+    {
+        CurrentSp = Math.Min(CurrentSp + amount, BaseStats.MaxSp);
+    }
 }

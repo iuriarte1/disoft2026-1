@@ -1,11 +1,12 @@
 using Octopath_Traveler_Model;
+using Octopath_Traveler.ActiveSkills.BeastSelectionSkill;
 using Octopath_Traveler.ActiveSkills.DivineSkills;
 
 namespace Octopath_Traveler.ActiveSkills;
 
 public class SkillEffectFactory
 {
-    public static IActiveSkillEffect Create(Skill skill, Traveler actor, Beast victim, Traveler ally, List<Traveler>  playerTeam)
+    public static IActiveSkillEffect Create(Skill skill, Traveler actor, Beast victim, Traveler ally, List<Traveler> playerTeam, int teamBpBeforeSpend = 0)
     {
         return skill.Name switch
         {
@@ -20,6 +21,12 @@ public class SkillEffectFactory
             "Mercy Strike" => new MercyStrikeSkillEffect(skill, victim),
             "Shooting Stars" => new ShootingStarsSkillEffect(skill),
             "Nightmare Chimera" => new NightmareChimeraSkillEffect(skill, victim, actor),
+            "Thousand Spears"  => new AutoSelectSingleTargetSkill(skill, living => living.MinBy(b => b.BaseStats.PhysicalDefense)),
+            "Rain of Arrows"   => new AutoSelectSingleTargetSkill(skill, living => living.MinBy(b => b.CurrentHp)),
+            "Guardian Liondog" => new AutoSelectSingleTargetSkill(skill, living => living.MaxBy(b => b.BaseStats.Speed)),
+            "HP Thief" => new HpThiefSkillEffect(skill, victim),
+            "Steal SP"  => new StealSpSkillEffect(skill, victim),
+
             // Buff y debuff
             "Lion Dance"      => new AllyBuffSkillEffect(skill, ally,new[] { StatModifierType.IncreasedPhysicalAttack }, 2),
             "Peacock Strut"   => new AllyBuffSkillEffect(skill, ally,new[] { StatModifierType.IncreasedElementalAttack }, 2),
@@ -36,7 +43,7 @@ public class SkillEffectFactory
             //Divinas
             "Winnehild's Battle Cry" => new WinnehildsBattleCrySkillEffect(skill),
             "Balogar's Blade"        => new BalogarsBladSkillEffect(skill, victim),
-            "Steorra's Prophecy"     => new SteorrasProphecySkillEffect(skill, playerTeam),
+            "Steorra's Prophecy" => new SteorrasProphecySkillEffect(skill, teamBpBeforeSpend - 3),
             _ when skill.Target == "Single"   => new SingleTargetOffensiveSkill(skill, victim),
             _ when skill.Target == "Enemies"  => new AllEnemiesOffensiveSkill(skill)
         };

@@ -8,17 +8,20 @@ public class SteorrasProphecySkillEffect : IActiveSkillEffect
     private const double BpModifierBonus = 0.20;
     private readonly Skill _skill;
     private readonly List<Traveler> _playerTeam;
+    private const int DivineCost = 3;
 
-    public SteorrasProphecySkillEffect(Skill skill, List<Traveler> playerTeam)
+    private readonly int _totalTeamBp;
+
+    public SteorrasProphecySkillEffect(Skill skill, int totalTeamBp)
     {
         _skill = skill;
-        _playerTeam = playerTeam;
+        _totalTeamBp = totalTeamBp;
     }
 
     public void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
     {
-        view.ShowSkillUsed(actor.Name, _skill.Name);
         double modifier = CalculateModifier();
+        view.ShowSkillUsed(actor.Name, _skill.Name);
         var scaledSkill = new Skill 
         { 
             Name = _skill.Name, Type = _skill.Type, 
@@ -41,7 +44,6 @@ public class SteorrasProphecySkillEffect : IActiveSkillEffect
 
     private double CalculateModifier()
     {
-        int totalBp = _playerTeam.Sum(t => t.CurrentBp);
-        return _skill.Modifier + BpModifierBonus * totalBp;
+        return _skill.Modifier + (BpModifierBonus * _totalTeamBp) * _skill.Modifier;
     }
 }
