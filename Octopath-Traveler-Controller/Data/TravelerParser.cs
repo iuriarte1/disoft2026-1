@@ -1,5 +1,7 @@
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
+using Octopath_Traveler.PassiveSkills;
+
 namespace Octopath_Traveler.Data;
 
 public class TravelerParser
@@ -35,7 +37,7 @@ public class TravelerParser
         var active = skillParser.GetActiveSkillsForTraveler(activeSkillNames);
         var passive = skillParser.GetPassiveSkillsForTraveler(supportSkillNames);
         traveler.ActiveSkills = active;
-        traveler.PasiveSkills = passive;
+        traveler.PassiveSkills = passive;
         return traveler;
     }
     private (string Name, List<string> ActiveSkills, List<string> SupportSkills) ExtractTravelerDataOfLine(string line)

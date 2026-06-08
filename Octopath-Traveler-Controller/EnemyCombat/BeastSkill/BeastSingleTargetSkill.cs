@@ -1,6 +1,7 @@
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
 using Octopath_Traveler.EnemyCombat.VictimSelection;
+using Octopath_Traveler.PassiveSkills;
 
 namespace Octopath_Traveler.EnemyCombat.BeastSkill;
 
@@ -9,12 +10,14 @@ public class BeastSingleTargetSkill : IBeastSkillEffect
     private readonly Skill _skill;
     private readonly IVictimSelector _victimSelector;
     private readonly string _skillType;
-    
-    public BeastSingleTargetSkill(Skill skill,string skilltype,  IVictimSelector victimSelector)
+    private readonly PassiveSkillManager _passiveManager;
+
+    public BeastSingleTargetSkill(Skill skill, string skillType, IVictimSelector victimSelector, PassiveSkillManager passiveManager)
     {
         _skill = skill;
+        _skillType = skillType;
         _victimSelector = victimSelector;
-        _skillType = skilltype;
+        _passiveManager = passiveManager;
     }
 
     public void Execute(Beast actor, List<Traveler> playerTeam, View view)
@@ -30,11 +33,11 @@ public class BeastSingleTargetSkill : IBeastSkillEffect
             victim.TakeDamageFromUnit(damage, actor);
             view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());
         }
+        if (victim.IsDead)
+            _passiveManager.ApplyOnDeathEffects(victim);
         view.ShowFinalHp(victim.Name, victim.CurrentHp);
     }
 
     private string GetAttackTypeName()
-    {
-        return _skillType == "Phys" ? "físico" : "elemental";
-    }
+        => _skillType == "Phys" ? "físico" : "elemental";
 }

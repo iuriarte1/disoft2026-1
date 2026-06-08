@@ -4,9 +4,7 @@ namespace Octopath_Traveler.PassiveSkills;
 
 public class ElementalAugmentation : PassiveSkillEffect
 {
-    private int boostStatElemAtk = 50;
-     public override void OnBattleStart(Traveler owner)
-    {
-        owner.BaseStats.ElementalAttack += boostStatElemAtk;
-    }
+    private const int BoostStatElemAtk = 50;
+    public override void OnBattleStart(Traveler owner)
+        => owner.BaseStats.ElementalAttack += BoostStatElemAtk;
 }

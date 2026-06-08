@@ -6,8 +6,7 @@ namespace Octopath_Traveler.ActiveSkills;
 
 public class SkillEffectFactory
 {
-    public static IActiveSkillEffect Create(Skill skill, Traveler actor, Beast victim, Traveler ally,
-        List<Traveler> playerTeam, int teamBpBeforeSpend = 0, int bpUsed = 0)
+    public static IActiveSkillEffect Create(Skill skill, Traveler actor, Beast victim, Traveler ally, int teamBpBeforeSpend = 0, int bpUsed = 0)
     {
         Skill effectiveSkill = ApplyBoostToModifier(skill, bpUsed);
         return effectiveSkill.Name switch
@@ -39,12 +38,12 @@ public class SkillEffectFactory
             "HP Thief" => new HpThiefSkillEffect(Skill.WithHits(effectiveSkill, 2), victim),
             "Steal SP"  => new StealSpSkillEffect(Skill.WithHits(effectiveSkill, 2), victim),
             // Buff y debuff
-            "Lion Dance"      => new AllyBuffSkillEffect(effectiveSkill, ally,new[] { StatModifierType.IncreasedPhysicalAttack }, 2, bpUsed, 2),
-            "Peacock Strut"   => new AllyBuffSkillEffect(effectiveSkill, ally,new[] { StatModifierType.IncreasedElementalAttack }, 2, bpUsed, 2),
-            "Stout Wall"      => new UserBuffSkillEffect(effectiveSkill,new[] { StatModifierType.IncreasedPhysicalDefense }, 3, bpUsed, 2),
-            "Shackle Foe"     => new SingleDebuffSkillEffect(effectiveSkill, victim, new[] { StatModifierType.DecreasedPhysicalAttack }, 2, bpUsed, 2),
+            "Lion Dance" => new AllyBuffSkillEffect(effectiveSkill, ally,new[] { StatModifierType.IncreasedPhysicalAttack }, 2, bpUsed, 2),
+            "Peacock Strut" => new AllyBuffSkillEffect(effectiveSkill, ally,new[] { StatModifierType.IncreasedElementalAttack }, 2, bpUsed, 2),
+            "Stout Wall" => new UserBuffSkillEffect(effectiveSkill,new[] { StatModifierType.IncreasedPhysicalDefense }, 3, bpUsed, 2),
+            "Shackle Foe" => new SingleDebuffSkillEffect(effectiveSkill, victim, new[] { StatModifierType.DecreasedPhysicalAttack }, 2, bpUsed, 2),
             "Armor Corrosive" => new SingleDebuffSkillEffect(effectiveSkill, victim, new[] { StatModifierType.DecreasedPhysicalDefense }, 2, bpUsed, 2),
-            "Starsong"        => new AllyBuffSkillEffect(effectiveSkill, ally, new[] { StatModifierType.IncreasedPhysicalDefense, StatModifierType.IncreasedElementalDefense, StatModifierType.IncreasedSpeed }, 2, bpUsed, 2),
+            "Starsong" => new AllyBuffSkillEffect(effectiveSkill, ally, new[] { StatModifierType.IncreasedPhysicalDefense, StatModifierType.IncreasedElementalDefense, StatModifierType.IncreasedSpeed }, 2, bpUsed, 2),
             "Sheltering Veil" => new AllyBuffSkillEffect(effectiveSkill, ally, new[] { StatModifierType.IncreasedElementalDefense }, 2, bpUsed, 2),
             "Abide" => new AllyBuffSkillEffect(effectiveSkill, ally, new[] { StatModifierType.IncreasedPhysicalAttack }, 2, bpUsed, 2),
             "Mole Dance" => new AllyBuffSkillEffect(effectiveSkill, ally, new[] { StatModifierType.IncreasedPhysicalDefense }, 2, bpUsed, 2),
@@ -53,7 +52,7 @@ public class SkillEffectFactory
             "Elemental Break" => new ElementalBreakSkillEffect(effectiveSkill, victim, StatModifierType.DecreasedElementalDefense, 2),
             //Divinas
             "Winnehild's Battle Cry" => new WinnehildsBattleCrySkillEffect(effectiveSkill),
-            "Balogar's Blade"        => new BalogarsBladSkillEffect(effectiveSkill, victim),
+            "Balogar's Blade" => new BalogarsBladSkillEffect(effectiveSkill, victim),
             "Steorra's Prophecy" => new SteorrasProphecySkillEffect(effectiveSkill, teamBpBeforeSpend - 3),
             _ when skill.Target == "Single"   => new SingleTargetOffensiveSkill(effectiveSkill, victim),
             _ when skill.Target == "Enemies"  => new AllEnemiesOffensiveSkill(effectiveSkill)

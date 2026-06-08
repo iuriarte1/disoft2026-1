@@ -6,7 +6,7 @@ public class Traveler : Unit
 {
     public List<string> Weapons { get; set; } = new List<string>();
     public List<Skill> ActiveSkills { get; set; } = new List<Skill>();
-    public List<Skill> PasiveSkills { get; set; } = new List<Skill>();
+    public List<Skill> PassiveSkills { get; set; } = new List<Skill>();
 
     public List<string> ActionOptions => new List<string>
         { "Ataque básico", "Usar habilidad", "Defender", "Huir" };
@@ -22,7 +22,7 @@ public class Traveler : Unit
         Name = template.Name;
         BaseStats = template.BaseStats;
         ActiveSkills = new List<Skill>(template.ActiveSkills);
-        PasiveSkills = new List<Skill>(template.PasiveSkills);
+        PassiveSkills = new List<Skill>(template.PassiveSkills);
         Weapons = new List<string>(template.Weapons);
         InitializeCurrentStats();
         SetInitialBp(1);
@@ -43,6 +43,6 @@ public class Traveler : Unit
         RevivedThisRound = false;
         HasDefendPriorityThisRound = false;
         TickStatEffects();
-        ResetBoostUsage(); 
+        ResetBoostUsage();
     }
 }

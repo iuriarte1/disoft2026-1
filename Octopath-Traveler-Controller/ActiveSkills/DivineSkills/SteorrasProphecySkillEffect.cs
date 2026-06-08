@@ -7,9 +7,6 @@ public class SteorrasProphecySkillEffect : IActiveSkillEffect
 {
     private const double BpModifierBonus = 0.20;
     private readonly Skill _skill;
-    private readonly List<Traveler> _playerTeam;
-    private const int DivineCost = 3;
-
     private readonly int _totalTeamBp;
 
     public SteorrasProphecySkillEffect(Skill skill, int totalTeamBp)

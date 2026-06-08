@@ -71,7 +71,7 @@ public class TeamValidationService
     {
         foreach (var traveler in travelers)
         {
-            if (traveler.PasiveSkills != null && traveler.PasiveSkills.Count > _passiveSkillsPerTraveler)
+            if (traveler.PassiveSkills != null && traveler.PassiveSkills.Count > _passiveSkillsPerTraveler)
             {
                 _view.InvalidTeamsFileMessage();
                 return false;
@@ -112,7 +112,7 @@ public class TeamValidationService
         foreach (var traveler in travelers)
         {
             if (!ValidateNotRepeatedSkills(traveler.ActiveSkills)) return false;
-            if (!ValidateNotRepeatedSkills(traveler.PasiveSkills)) return false;
+            if (!ValidateNotRepeatedSkills(traveler.PassiveSkills)) return false;
         }
         return true;
     }

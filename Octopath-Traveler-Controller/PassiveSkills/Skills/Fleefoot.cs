@@ -4,9 +4,7 @@ namespace Octopath_Traveler.PassiveSkills;
 
 public class Fleefoot : PassiveSkillEffect
 {
-    private int boostSpeed = 50;
+    private const int BoostSpeed = 50;
     public override void OnBattleStart(Traveler owner)
-    {
-        owner.BaseStats.Speed += boostSpeed;
-    }
+        => owner.BaseStats.Speed += BoostSpeed;
 }

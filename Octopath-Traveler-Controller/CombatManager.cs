@@ -12,18 +12,21 @@ public class CombatManager
     private readonly View _view;
     private readonly List<Traveler> _playerTeam;
     private readonly List<Beast> _enemyTeam;
+    private readonly PassiveSkillManager _passiveManager;
     private int _roundCount = 1;
     private bool _travelersRunAway = false;
+
     public CombatManager(View view, List<Traveler> playerTeam, List<Beast> enemyTeam)
     {
         _view = view;
         _playerTeam = playerTeam;
         _enemyTeam = enemyTeam;
+        _passiveManager = new PassiveSkillManager(playerTeam);
     }
+
     public void StartBattle()
     {
-        var passiveManager = new PassiveSkillManager(_playerTeam);
-        passiveManager.ApplyBattleStartEffects();
+        _passiveManager.ApplyBattleStartEffects();
         while (IsBattleActive())
         {
             _view.ShowRoundMessage(_roundCount);
@@ -34,11 +37,13 @@ public class CombatManager
         }
         ShowFinalResult();
     }
+
     private bool IsBattleActive()
     {
         if (_travelersRunAway) return false;
         return _playerTeam.Any(t => t.CurrentHp > 0) && _enemyTeam.Any(b => b.CurrentHp > 0);
     }
+
     private void ExecuteRound()
     {
         foreach (var traveler in _playerTeam)
@@ -65,36 +70,36 @@ public class CombatManager
             nextTurns = turnManager.GetNextRoundTurns();
         }
     }
+
     private void ShowCurrentGameState(List<Unit> remainingTurns, List<Unit> nextTurns, TurnManager turnManager)
     {
         var gameStateManager = new StateManager(_view, _playerTeam, _enemyTeam);
         gameStateManager.GameStateStatsMessage();
         _view.ShowTurnsMessage(turnManager.GetNames(remainingTurns), turnManager.GetNames(nextTurns));
     }
+
     private void ProcessUnitTurn(Unit unit)
     {
         if (unit is Traveler traveler)
-        {
             HandlePlayerTurn(traveler);
-        }
         else if (unit is Beast beast)
-        {
             HandleEnemyTurn(beast);
-        }
     }
+
     private void HandlePlayerTurn(Traveler traveler)
     {
-        var playerHandler =new PlayerTurnHandler(_view, _playerTeam, _enemyTeam);
+        var playerHandler = new PlayerTurnHandler(_view, _playerTeam, _enemyTeam, _passiveManager);
         playerHandler.ExecuteTurn(traveler);
-        if (playerHandler.ranAway) 
+        if (playerHandler.ranAway)
             _travelersRunAway = true;
     }
+
     private void HandleEnemyTurn(Beast beast)
     {
-        var beastAction = new EnemyTurn(beast, _playerTeam, _enemyTeam, _view);
+        var beastAction = new EnemyTurn(beast, _playerTeam, _enemyTeam, _view, _passiveManager);
         beastAction.Execute();
     }
-    
+
     private void ShowFinalResult()
     {
         if (_playerTeam.Any(t => !t.IsDead) && !_travelersRunAway)
@@ -102,15 +107,16 @@ public class CombatManager
         else
             _view.ShowDefetedTravelerMessage();
     }
+
     private void GainedBoostPoints()
     {
         foreach (var traveler in _playerTeam.Where(t => !t.IsDead && !t.UsedBoostThisRound))
             traveler.GainBp();
     }
+
     private void EndOfRoundCleanup()
     {
-        var passiveManager = new PassiveSkillManager(_playerTeam);
-        passiveManager.ApplyEndOfRoundEffects();
+        _passiveManager.ApplyEndOfRoundEffects();
         var clean = new EndOfRoundCleaner(_playerTeam, _enemyTeam);
         clean.Clean();
     }

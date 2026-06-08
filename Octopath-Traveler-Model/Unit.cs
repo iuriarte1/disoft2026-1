@@ -176,6 +176,6 @@ public class Unit
     private bool HasDivineAura()
     {
         if (this is not Traveler traveler) return false;
-        return traveler.PasiveSkills.Any(s => s.Name == "Divine Aura");
+        return traveler.PassiveSkills.Any(s => s.Name == "Divine Aura");
     }
 }

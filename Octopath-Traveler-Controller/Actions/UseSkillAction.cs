@@ -1,6 +1,7 @@
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
 using Octopath_Traveler.ActiveSkills;
+using Octopath_Traveler.PassiveSkills;
 
 namespace Octopath_Traveler.Actions;
 
@@ -18,8 +19,8 @@ public class UseSkillAction : ICombatAction
     private int _bPToUse;
     private int _teamBpBeforeSpend;
     private const int MaxBoostPointsPerAction = 3;
-    
-    public bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
+
+    public bool Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view, PassiveSkillManager passiveManager)
     {
         _actor = actor;
         _view = view;
@@ -28,20 +29,17 @@ public class UseSkillAction : ICombatAction
         SaveSkillsNames();
         GetIndexSkillChosen();
         if (!ValidateIndexSkillChosen())
-        {
             return false;
-        }
         GetSkillChosen();
-        if (!SelectTarget()) 
-        {
+        if (!SelectTarget())
             return false;
-        }
         GetBoostPointsToUse();
         _teamBpBeforeSpend = playerTeam.Sum(t => t.CurrentBp);
         SpendSkillSp();
         ExecuteSkillEffect();
         return true;
     }
+
     private void SaveSkillsNames()
     {
         foreach (var skill in _actor.ActiveSkills.Where(s => IsSkillAvailable(s)))
@@ -65,17 +63,15 @@ public class UseSkillAction : ICombatAction
         }
         _bPToUse = new BpInputHandler(_view).GetValidBoostPoints(_actor);
     }
+
     private void GetIndexSkillChosen()
     {
         _indexOfSkillChosen = _view.GetSkillOptionChoosen(_skillsNames, _actor.Name);
     }
+
     private bool ValidateIndexSkillChosen()
     {
-        if (_indexOfSkillChosen > _skillsNames.Count)
-        {
-            return false;
-        }
-        return true;
+        return _indexOfSkillChosen <= _skillsNames.Count;
     }
 
     private void GetSkillChosen()
@@ -88,6 +84,7 @@ public class UseSkillAction : ICombatAction
         _actor.SpendSp(_skillChosen.SP);
         _actor.SpendBp(_bPToUse);
     }
+
     private bool SelectTarget()
     {
         switch (_skillChosen.Target)
@@ -108,15 +105,17 @@ public class UseSkillAction : ICombatAction
                 return false;
         }
     }
+
     private void ExecuteSkillEffect()
     {
         IActiveSkillEffect effect = SkillEffectFactory.Create(
-            _skillChosen, _actor, _victimChosen, _allyChosen, _playerTeam, _teamBpBeforeSpend, _bPToUse);
+            _skillChosen, _actor, _victimChosen, _allyChosen, _teamBpBeforeSpend, _bPToUse);
         effect.Execute(_actor, _playerTeam, _enemyTeam, _view);
     }
+
     private bool SkillSelectsWeaponFirst()
         => _skillChosen.Name == "Nightmare Chimera";
+
     private bool SkillSelectsTargetAutomatically()
         => _skillChosen.Name is "Thousand Spears" or "Rain of Arrows" or "Guardian Liondog";
-    
 }

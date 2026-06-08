@@ -1,5 +1,6 @@
 using Octopath_Traveler_Model;
 using Octopath_Traveler_View;
+using Octopath_Traveler.PassiveSkills;
 
 namespace Octopath_Traveler.EnemyCombat.BeastSkill;
 
@@ -7,10 +8,13 @@ public class BeastAllEnemiesSkill : IBeastSkillEffect
 {
     private readonly Skill _skill;
     private readonly string _skillType;
-    public BeastAllEnemiesSkill(Skill skill, string skillType)
+    private readonly PassiveSkillManager _passiveManager;
+
+    public BeastAllEnemiesSkill(Skill skill, string skillType, PassiveSkillManager passiveManager)
     {
         _skill = skill;
         _skillType = skillType;
+        _passiveManager = passiveManager;
     }
 
     public void Execute(Beast actor, List<Traveler> playerTeam, View view)
@@ -20,6 +24,7 @@ public class BeastAllEnemiesSkill : IBeastSkillEffect
         ApplyDamageToTeam(actor, aliveTeam, view);
         ShowFinalHpOfTeam(aliveTeam, view);
     }
+
     private void ApplyDamageToTeam(Beast actor, List<Traveler> aliveTeam, View view)
     {
         foreach (var victim in aliveTeam)
@@ -36,13 +41,12 @@ public class BeastAllEnemiesSkill : IBeastSkillEffect
             victim.TakeDamage(damage);
             view.ShowBeastDamage(victim.Name, damage, GetAttackTypeName());
         }
-        
+        if (victim.IsDead)
+            _passiveManager.ApplyOnDeathEffects(victim);
     }
 
     private string GetAttackTypeName()
-    {
-        return _skillType == "Phys" ? "físico" : "elemental";
-    }
+        => _skillType == "Phys" ? "físico" : "elemental";
 
     private void ShowFinalHpOfTeam(List<Traveler> aliveTeam, View view)
     {
