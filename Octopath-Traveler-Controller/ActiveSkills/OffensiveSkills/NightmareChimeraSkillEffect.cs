@@ -23,20 +23,25 @@ public class NightmareChimeraSkillEffect : IActiveSkillEffect
         if (weapon == null) return;
         Beast victim = new VictimOptionManager(view, enemyTeam.Where(e => !e.IsDead).ToList(), actor.Name).GetVictimChoosen();
         if (victim == null) return;
-        int bp = view.GetHowManyBoostPointsToUse();
-        var skillModified = SkillTypeModifiedWithWeapon(weapon);
+        int bp = new BpInputHandler(view).GetValidBoostPoints(actor);
+        actor.SpendBp(bp);
+        var skillModified = SkillTypeModifiedWithWeapon(weapon, bp);
         var effect = new SingleTargetOffensiveSkill(skillModified, victim);
         effect.Execute(actor, playerTeam, enemyTeam, view);
     }
-    private Skill SkillTypeModifiedWithWeapon(string weapon)
+
+    private Skill SkillTypeModifiedWithWeapon(string weapon, int bp)
     {
+        double boostedModifier = _skill.Modifier * (1 + 0.9 * bp);
         return new Skill
         {
             Name = _skill.Name,
             SP = _skill.SP,
             Type = weapon,
-            Modifier = _skill.Modifier,
-            Target = _skill.Target
+            Modifier = boostedModifier,
+            Target = _skill.Target,
+            Boost = _skill.Boost,
+            Hits = _skill.Hits
         };
     }
 }

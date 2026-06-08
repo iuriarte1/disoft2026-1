@@ -111,7 +111,7 @@ public class UseSkillAction : ICombatAction
     private void ExecuteSkillEffect()
     {
         IActiveSkillEffect effect = SkillEffectFactory.Create(
-            _skillChosen, _actor, _victimChosen, _allyChosen, _playerTeam, _teamBpBeforeSpend);
+            _skillChosen, _actor, _victimChosen, _allyChosen, _playerTeam, _teamBpBeforeSpend, _bPToUse);
         effect.Execute(_actor, _playerTeam, _enemyTeam, _view);
     }
     private bool SkillSelectsWeaponFirst()

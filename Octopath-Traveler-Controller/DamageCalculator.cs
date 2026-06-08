@@ -20,7 +20,7 @@ public static class DamageCalculator
         double rawDamage = attack * modifier - defense;
         rawDamage *= StatEffectMultipliers.AttackMultiplier(actor, isPhysical);
         rawDamage *= StatEffectMultipliers.DefenseMultiplier(victim, isPhysical);
-        return rawDamage;
+        return Math.Round(rawDamage, 8);
     }
 
     public static double GetDamageMultiplier(Beast victim, string attackType)

@@ -25,4 +25,18 @@ public class Skill
             Hits = hits
         };
     }
+    public static Skill WithBoostedModifier(Skill skill, double boostedModifier)
+    {
+        return new Skill
+        {
+            Name = skill.Name,
+            SP = skill.SP,
+            Type = skill.Type,
+            Modifier = boostedModifier,
+            Target = skill.Target,
+            Description = skill.Description,
+            Boost = skill.Boost,
+            Hits = skill.Hits
+        };
+    }
 }

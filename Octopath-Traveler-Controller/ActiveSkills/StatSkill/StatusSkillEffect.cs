@@ -7,13 +7,14 @@ public abstract class StatusSkillEffect : IActiveSkillEffect
 {
     protected readonly Skill _skill;
     private readonly IReadOnlyList<StatModifierType> _effects;
-    private readonly int _baseRounds;
+    private readonly int _totalRounds;
 
-    protected StatusSkillEffect(Skill skill, IReadOnlyList<StatModifierType> effects, int baseRounds)
+
+    protected StatusSkillEffect(Skill skill, IReadOnlyList<StatModifierType> effects, int baseRounds, int bpUsed, int roundsPerBp)
     {
         _skill = skill;
         _effects = effects;
-        _baseRounds = baseRounds;
+        _totalRounds = baseRounds + roundsPerBp * bpUsed;
     }
 
     public void Execute(Traveler actor, List<Traveler> playerTeam, List<Beast> enemyTeam, View view)
@@ -29,8 +30,8 @@ public abstract class StatusSkillEffect : IActiveSkillEffect
     {
         foreach (var effect in _effects)
         {
-            target.ApplyStatEffect(effect, _baseRounds);
-            view.ShowStatEffectApplied(target.Name, StatEffectLabel.For(effect), _baseRounds);
+            target.ApplyStatEffect(effect, _totalRounds);
+            view.ShowStatEffectApplied(target.Name, StatEffectLabel.For(effect), _totalRounds);
         }
     }
 }
